@@ -1,7 +1,6 @@
 const TEduBoard = require('./libs/TEduBoard_miniprogram.min.js');
 const ImHandler = require('../webim-component/ImHandler');
 
-
 Component({
   /**
    * 组件的属性列表
@@ -9,23 +8,23 @@ Component({
   properties: {
     userId: {
       type: String,
-      value: ''
+      value: '',
     },
 
     userSig: {
       type: String,
-      value: ''
+      value: '',
     },
 
     sdkAppID: {
       type: Number,
-      value: null
+      value: null,
     },
 
     classId: {
       type: Number,
-      value: null
-    }
+      value: null,
+    },
   },
 
   /**
@@ -34,7 +33,7 @@ Component({
   data: {
     board: null,
     boardImg: '',
-    currentPic: "", //预留图片链接
+    currentPic: '', //预留图片链接
     imgLoadList: null, //预加载图片链接列表
     bgColor: '#ffffff',
     naturalWidth: 0,
@@ -45,7 +44,7 @@ Component({
     wrapWidth: 0,
     wrapHeight: 0,
     ratio: '16:9',
-    canvasComponent: null
+    canvasComponent: null,
   },
 
   /**
@@ -54,28 +53,39 @@ Component({
   methods: {
     render(boardConfig, callback) {
       this.data.ratio = boardConfig.ratio;
-      wx.createSelectorQuery().in(this).select('.tic-board-box').boundingClientRect((rect) => {
-        var width, height;
-        var widthHeight = this.calculateBoardSize(rect.width, rect.height);
-        width = widthHeight.width;
-        height = widthHeight.height;
+      wx.createSelectorQuery()
+        .in(this)
+        .select('.tic-board-box')
+        .boundingClientRect((rect) => {
+          var width, height;
+          var widthHeight = this.calculateBoardSize(rect.width, rect.height);
+          width = widthHeight.width;
+          height = widthHeight.height;
 
-        this.setData({
-          wrapWidth: width,
-          wrapHeight: height,
-          boardWidth: width,
-          boardHeight: height
-        }, () => {
-          wx.createSelectorQuery().in(this).select('.tic-board-wrap').boundingClientRect((rect) => {
-            boardConfig.containerOffset = {
-              left: rect.left,
-              top: rect.top
-            }
-            this.init(boardConfig);
-            callback && callback();
-          }).exec();
-        });
-      }).exec();
+          this.setData(
+            {
+              wrapWidth: width,
+              wrapHeight: height,
+              boardWidth: width,
+              boardHeight: height,
+            },
+            () => {
+              wx.createSelectorQuery()
+                .in(this)
+                .select('.tic-board-wrap')
+                .boundingClientRect((rect) => {
+                  boardConfig.containerOffset = {
+                    left: rect.left,
+                    top: rect.top,
+                  };
+                  this.init(boardConfig);
+                  callback && callback();
+                })
+                .exec();
+            },
+          );
+        })
+        .exec();
     },
 
     getBoardInstance() {
@@ -98,8 +108,8 @@ Component({
         preStep: this.data.preStep, //预加载步数
         width,
         height,
-        canvasComponent, // 
-        canvasDrawComponent, // 临时涂鸦数据（真正数据是画在canvasComponent） 
+        canvasComponent, //
+        canvasDrawComponent, // 临时涂鸦数据（真正数据是画在canvasComponent）
         context: this,
         orientation: boardConfig.orientation,
 
@@ -110,13 +120,13 @@ Component({
         toolType: boardConfig.toolType,
         globalBackgroundColor: boardConfig.globalBackgroundColor,
         dataSyncEnable: boardConfig.dataSyncEnable,
-        smoothLevel: boardConfig.smoothLevel
+        smoothLevel: boardConfig.smoothLevel,
       });
-
 
       this.data.orientation = boardConfig.orientation;
 
-      if (this.data.orientation === 'horizontal') { // 横屏
+      if (this.data.orientation === 'horizontal') {
+        // 横屏
         height = this.data.boardWidth;
         width = this.data.boardHeight;
       } else {
@@ -126,23 +136,22 @@ Component({
       this.setData({
         orientation: boardConfig.orientation,
         boardWidth: width,
-        boardHeight: height
+        boardHeight: height,
       });
 
       /*监听draw发送的预加载列表和图像链接 */
-      this.data.board.on("preload", (data) => {
+      this.data.board.on('preload', (data) => {
         this.setData({
           currentPic: data.currentPic,
-          imgLoadList: data.preloadList
+          imgLoadList: data.preloadList,
         });
         console.log(data.preloadList);
       });
 
-      this.data.board.on(TEduBoard.EVENT.TEB_SYNCDATA, data => {
+      this.data.board.on(TEduBoard.EVENT.TEB_SYNCDATA, (data) => {
         ImHandler.sendBoardMsg(data);
       });
     },
-
 
     bindContainerTouchstart(event) {
       this.data.board.canvasTouchStart(event);
@@ -160,7 +169,7 @@ Component({
 
     /**
      * 图片加载完成
-     * @param {*} ev 
+     * @param {*} ev
      */
     imgOnLoad(ev) {
       let src = ev.currentTarget.dataset.src,
@@ -168,12 +177,15 @@ Component({
         height = ev.detail.height;
 
       // 获取图片原始宽高
-      this.setData({
-        naturalWidth: width,
-        naturalHeight: height
-      }, () => {
-        this.updateImgStyle();
-      });
+      this.setData(
+        {
+          naturalWidth: width,
+          naturalHeight: height,
+        },
+        () => {
+          this.updateImgStyle();
+        },
+      );
     },
 
     // 图片加载失败
@@ -182,44 +194,56 @@ Component({
     // orientation
     setOrientation(orientation = 'vertical') {
       this.setData({
-        orientation: orientation
+        orientation: orientation,
       });
-      wx.createSelectorQuery().in(this).select('.tic-board-box').boundingClientRect((rect) => {
-        var widthHeight;
-        var wrapWidth = 0;
-        var wrapHeight = 0;
+      wx.createSelectorQuery()
+        .in(this)
+        .select('.tic-board-box')
+        .boundingClientRect((rect) => {
+          var widthHeight;
+          var wrapWidth = 0;
+          var wrapHeight = 0;
 
-        if (this.data.orientation === 'horizontal') { // 横屏
-          widthHeight = this.calculateBoardSize(rect.height, rect.width);
-          wrapWidth = widthHeight.height;
-          wrapHeight = widthHeight.width;
-        } else {
-          widthHeight = this.calculateBoardSize(rect.width, rect.height);
-          wrapWidth = widthHeight.width;
-          wrapHeight = widthHeight.height;
-        }
-
-        this.setData({
-          wrapWidth: wrapWidth,
-          wrapHeight: wrapHeight,
-          boardWidth: widthHeight.width,
-          boardHeight: widthHeight.height
-        }, () => {
-          wx.createSelectorQuery().in(this).select('.tic-board-wrap').boundingClientRect((rect) => {
-            if (this.data.board) {
-              this.data.board.setContainerOffset({
-                left: rect.left,
-                top: rect.top
-              });
-            }
-          }).exec();
-          if (this.data.board) {
-            this.data.board.resize(widthHeight.width, widthHeight.height);
-            this.data.board.setOrientation(orientation);
-            this.updateImgStyle();
+          if (this.data.orientation === 'horizontal') {
+            // 横屏
+            widthHeight = this.calculateBoardSize(rect.height, rect.width);
+            wrapWidth = widthHeight.height;
+            wrapHeight = widthHeight.width;
+          } else {
+            widthHeight = this.calculateBoardSize(rect.width, rect.height);
+            wrapWidth = widthHeight.width;
+            wrapHeight = widthHeight.height;
           }
-        });
-      }).exec();
+
+          this.setData(
+            {
+              wrapWidth: wrapWidth,
+              wrapHeight: wrapHeight,
+              boardWidth: widthHeight.width,
+              boardHeight: widthHeight.height,
+            },
+            () => {
+              wx.createSelectorQuery()
+                .in(this)
+                .select('.tic-board-wrap')
+                .boundingClientRect((rect) => {
+                  if (this.data.board) {
+                    this.data.board.setContainerOffset({
+                      left: rect.left,
+                      top: rect.top,
+                    });
+                  }
+                })
+                .exec();
+              if (this.data.board) {
+                this.data.board.resize(widthHeight.width, widthHeight.height);
+                this.data.board.setOrientation(orientation);
+                this.updateImgStyle();
+              }
+            },
+          );
+        })
+        .exec();
     },
 
     // 计算白板尺寸
@@ -238,18 +262,17 @@ Component({
       }
 
       if (containerWidth / containerHeight > ratioWidth / ratioHeight) {
-        width = containerHeight * ratioWidth / ratioHeight;
+        width = (containerHeight * ratioWidth) / ratioHeight;
         height = containerHeight;
       } else {
         width = containerWidth;
-        height = containerWidth * ratioHeight / ratioWidth;
+        height = (containerWidth * ratioHeight) / ratioWidth;
       }
       return {
         width,
-        height
-      }
+        height,
+      };
     },
-
 
     addSyncData(data) {
       this.data.board.addSyncData(data);
@@ -258,54 +281,55 @@ Component({
     // 设置当前背景图片
     setCurrentImg(currentPic, currentBoard) {
       this.setData({
-        currentPic
+        currentPic,
       });
     },
 
     // 设置预加载图片
     setPreLoadImgList(preloadList) {
       this.setData({
-        preloadList
+        preloadList,
       });
     },
 
     // 设置白板背景颜色
     setBoardBgColor(bgColor) {
       this.setData({
-        bgColor
+        bgColor,
       });
     },
 
     // 更新图片样式
     updateImgStyle() {
       var style = [];
-      if (this.data.orientation !== 'horizontal') { // 水平方向
+      if (this.data.orientation !== 'horizontal') {
+        // 水平方向
         style = ['left: 50%', 'transform: translate(-50%, -50%) ', 'top: 50%'];
         if (this.data.boardWidth / this.data.boardHeight < this.data.naturalWidth / this.data.naturalHeight) {
           style.push('width:100%');
-          style.push('height:' + (this.data.boardWidth / this.data.naturalWidth * this.data.naturalHeight) + 'px');
+          style.push('height:' + (this.data.boardWidth / this.data.naturalWidth) * this.data.naturalHeight + 'px');
         } else {
-          style.push('width:' + this.data.boardHeight / this.data.naturalHeight * this.data.naturalWidth + 'px');
+          style.push('width:' + (this.data.boardHeight / this.data.naturalHeight) * this.data.naturalWidth + 'px');
           style.push('height:100%');
         }
       } else {
         if (this.data.boardWidth / this.data.boardHeight < this.data.naturalWidth / this.data.naturalHeight) {
           style.push('top: 0');
           style.push('width:' + this.data.boardWidth + 'px');
-          var height = (this.data.boardWidth / this.data.naturalWidth * this.data.naturalHeight);
+          var height = (this.data.boardWidth / this.data.naturalWidth) * this.data.naturalHeight;
           style.push('height:' + height + 'px');
           style.push('left:' + (this.data.boardHeight + height) / 2 + 'px');
         } else {
           style.push('left: ' + this.data.boardHeight + 'px');
-          var width = this.data.boardHeight / this.data.naturalHeight * this.data.naturalWidth;
+          var width = (this.data.boardHeight / this.data.naturalHeight) * this.data.naturalWidth;
           style.push('width:' + width + 'px');
           style.push('height:' + this.data.boardHeight + 'px');
           style.push('top:' + (this.data.boardWidth - width) / 2 + 'px');
         }
       }
       this.setData({
-        imgStyle: style.join(';')
+        imgStyle: style.join(';'),
       });
-    }
-  }
-})
+    },
+  },
+});

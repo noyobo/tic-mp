@@ -9,136 +9,136 @@ Component({
   properties: {
     roomID: {
       type: Number,
-      value: 0
+      value: 0,
     },
     userID: {
       type: String,
-      value: ''
+      value: '',
     },
     userName: {
       type: String,
-      value: ''
+      value: '',
     },
     userSig: {
       type: String,
-      value: ''
+      value: '',
     },
 
     useCloud: {
       type: Boolean, //是否启用云上环境 false 自研环境， 云上环境
-      value: true
+      value: true,
     },
 
     sdkAppID: {
       type: Number,
-      value: 0
+      value: 0,
     },
 
     accountType: {
       type: Number,
-      value: 0
+      value: 0,
     },
     privateMapKey: {
       type: String,
-      value: ''
+      value: '',
     },
     template: {
       type: String,
       value: '',
-      observer: function (newVal) {
-        this.initLayout(newVal)
-      }
+      observer: function(newVal) {
+        this.initLayout(newVal);
+      },
     }, //使用的界面模版
     whiteness: {
       type: String,
-      value: 5
+      value: 5,
     },
     beauty: {
       type: String,
-      value: 5
+      value: 5,
     }, //美颜程度，取值为0~9
     aspect: {
       type: String,
-      value: '3:4'
+      value: '3:4',
     }, //设置画面比例，取值为'3:4'或者'9:16'
     minBitrate: {
       type: Number,
-      value: 400
+      value: 400,
     }, //设置码率范围为[minBitrate,maxBitrate]，四人建议设置为200~400
     maxBitrate: {
       type: Number,
-      value: 800
+      value: 800,
     },
     muted: {
       type: Boolean,
-      value: false
+      value: false,
     }, //设置推流是否静音
     debug: {
       type: Boolean,
-      value: false
+      value: false,
     }, //是否显示log
     enableIM: {
       type: Boolean, //是否启用IM
-      value: true
+      value: true,
     },
 
     enableCamera: {
       type: Boolean,
-      value: true
+      value: true,
     },
 
     smallViewLeft: {
       type: String,
-      value: '1vw'
+      value: '1vw',
     },
 
     smallViewTop: {
       type: String,
-      value: '1vw'
+      value: '1vw',
     },
 
     smallViewWidth: {
       type: String,
-      value: '30vw'
+      value: '30vw',
     },
 
     smallViewHeight: {
       type: String,
-      value: '40vw'
+      value: '40vw',
     },
 
     waitingImg: {
       type: String,
-      value: ''
+      value: '',
     },
 
     // live-player的背景图
     playerBackgroundImg: {
       type: String,
-      value: ''
+      value: '',
     },
 
     pusherBackgroundImg: {
       type: String,
-      value: ''
+      value: '',
     },
 
     loadingImg: {
       type: String,
-      value: ''
+      value: '',
     },
 
     // 纯音频推流
     pureAudioPushMod: {
       type: Number,
-      value: 0
+      value: 0,
     },
 
     // 录制文件的ID
     recordId: {
       type: Number,
-      value: null
-    }
+      value: null,
+    },
   },
 
   /**
@@ -173,9 +173,9 @@ Component({
     if (this.data.template === '1v1horizontal') {
       var query = wx.createSelectorQuery().in(this);
       var el = query.select('#txc_video_box');
-      el.boundingClientRect(function (rect) {
+      el.boundingClientRect(function(rect) {
         wx.getSystemInfo({
-          success: function (res) {
+          success: function(res) {
             var fullWidth = res.windowWidth;
             var halfWidth = (rect.width - fullWidth / 100) / 2;
             var pw = 3,
@@ -184,16 +184,14 @@ Component({
               var p = self.data.aspect.split(':');
               pw = p[0];
               ph = p[1];
-            } catch (e) {
-
-            }
+            } catch (e) {}
             self.setData({
               winWidth: halfWidth,
-              winHeight: halfWidth * ph / pw
+              winHeight: (halfWidth * ph) / pw,
             });
-          }
-        })
-      }).exec()
+          },
+        });
+      }).exec();
     }
   },
 
@@ -208,7 +206,7 @@ Component({
   methods: {
     /**
      * 初始化布局，当template改变时
-     * @param {*} templateName 
+     * @param {*} templateName
      */
     initLayout(templateName) {
       self = this;
@@ -218,11 +216,11 @@ Component({
           this.setData({
             maxMembers: 1,
             members: [{}],
-            template: templateName
+            template: templateName,
           });
           break;
         default:
-          break
+          break;
       }
     },
 
@@ -230,48 +228,58 @@ Component({
      * 初始化IM
      */
     initIm() {
-      imHandler.initData({
-        'sdkAppID': this.data.sdkAppID, //用户所属应用id,必填
-        'appIDAt3rd': this.data.sdkAppID, //用户所属应用id，必填
-        'accountType': this.data.accountType, //用户所属应用帐号类型，必填
-        'identifier': this.data.userID, //当前用户ID,必须是否字符串类型，选填
-        'identifierNick': this.data.userName || this.data.userID, //当前用户昵称，选填
-        'userSig': this.data.userSig
-      }, {});
+      imHandler.initData(
+        {
+          sdkAppID: this.data.sdkAppID, //用户所属应用id,必填
+          appIDAt3rd: this.data.sdkAppID, //用户所属应用id，必填
+          accountType: this.data.accountType, //用户所属应用帐号类型，必填
+          identifier: this.data.userID, //当前用户ID,必须是否字符串类型，选填
+          identifierNick: this.data.userName || this.data.userID, //当前用户昵称，选填
+          userSig: this.data.userSig,
+        },
+        {},
+      );
 
       // 初始化Im登录回调
       imHandler.initLoginListeners(this.imLoginListener());
 
       // 登录IM
-      imHandler.loginIm((res) => {
-        // 登录成功
-        this.fireIMEvent(CONSTANT.IM.LOGIN_EVENT, res.ErrorCode, res);
-        // 创建或者加入群
-        imHandler.joinGroup(this.data.roomID, (res) => {
-          // 创建或者加入群成功
-          this.fireIMEvent(CONSTANT.IM.JOIN_GROUP_EVENT, res.ErrorCode, res);
-        }, (error) => {
-          // 创建或者加入群失败
-          this.fireIMEvent(CONSTANT.IM.JOIN_GROUP_EVENT, error.ErrorCode, error);
-        });
-      }, (error) => {
-        // 登录失败
-        this.fireIMEvent(CONSTANT.IM.LOGIN_EVENT, error.ErrorCode, error);
-      });
+      imHandler.loginIm(
+        (res) => {
+          // 登录成功
+          this.fireIMEvent(CONSTANT.IM.LOGIN_EVENT, res.ErrorCode, res);
+          // 创建或者加入群
+          imHandler.joinGroup(
+            this.data.roomID,
+            (res) => {
+              // 创建或者加入群成功
+              this.fireIMEvent(CONSTANT.IM.JOIN_GROUP_EVENT, res.ErrorCode, res);
+            },
+            (error) => {
+              // 创建或者加入群失败
+              this.fireIMEvent(CONSTANT.IM.JOIN_GROUP_EVENT, error.ErrorCode, error);
+            },
+          );
+        },
+        (error) => {
+          // 登录失败
+          this.fireIMEvent(CONSTANT.IM.LOGIN_EVENT, error.ErrorCode, error);
+        },
+      );
     },
 
     /**
      * webrtc-room程序的入口
      */
-    start: function (isNetWorkChange) {
+    start: function(isNetWorkChange) {
       self = this;
       this.data.hasExitRoom = false;
 
       // 如果有推流地址了,且只是网络变化，则不再获取推流
       if (this.data.originPushURL && isNetWorkChange) {
         this.setData({
-          pushURL: this.data.originPushURL + '&tx_time=' + new Date().getTime()
-        })
+          pushURL: this.data.originPushURL + '&tx_time=' + new Date().getTime(),
+        });
       } else {
         this.requestSigServer(this.data.userSig, this.data.privateMapKey);
         if (this.data.enableIM) {
@@ -283,7 +291,7 @@ Component({
     /**
      * 停止
      */
-    stop: function () {
+    stop: function() {
       self.data.hasExitRoom = true;
       self.exitRoom();
     },
@@ -291,24 +299,24 @@ Component({
     /**
      * 暂停
      */
-    pause: function () {
+    pause: function() {
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
       self.data.pusherContext && self.data.pusherContext.pause();
 
-      self.data.members.forEach(function (val) {
+      self.data.members.forEach(function(val) {
         val.playerContext && val.playerContext.pause();
       });
     },
 
-    resume: function () {
+    resume: function() {
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
       self.data.pusherContext && self.data.pusherContext.resume();
 
-      self.data.members.forEach(function (val) {
+      self.data.members.forEach(function(val) {
         val.playerContext && val.playerContext.resume();
       });
     },
@@ -316,7 +324,7 @@ Component({
     /**
      * 切换摄像头
      */
-    switchCamera: function () {
+    switchCamera: function() {
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
@@ -326,13 +334,13 @@ Component({
     /**
      * 退出房间
      */
-    exitRoom: function () {
+    exitRoom: function() {
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
       self.data.pusherContext && self.data.pusherContext.stop && self.data.pusherContext.stop();
 
-      self.data.members.forEach(function (val) {
+      self.data.members.forEach(function(val) {
         val.playerContext && val.playerContext.stop();
       });
 
@@ -341,26 +349,30 @@ Component({
       }
 
       self.setData({
-        members: self.data.members
+        members: self.data.members,
       });
     },
 
-    postErrorEvent: function (errCode, errMsg) {
+    postErrorEvent: function(errCode, errMsg) {
       self.postEvent('error', errCode, errMsg);
     },
 
-    postEvent: function (tag, code, detail) {
-      self.triggerEvent('RoomEvent', {
-        tag: tag,
-        code: code,
-        detail: detail
-      }, {});
+    postEvent: function(tag, code, detail) {
+      self.triggerEvent(
+        'RoomEvent',
+        {
+          tag: tag,
+          code: code,
+          detail: detail,
+        },
+        {},
+      );
     },
 
     /**
      * 请求SIG服务
      */
-    requestSigServer: function (userSig, privMapEncrypt) {
+    requestSigServer: function(userSig, privMapEncrypt) {
       console.log('获取sig:', this.data);
 
       var self = this;
@@ -369,82 +381,92 @@ Component({
       var sdkAppID = this.data.sdkAppID;
 
       // 使用云上还是自研
-      var host = this.data.useCloud ? "https://official.opensso.tencent-cloud.com" : "https://yun.tim.qq.com";
-      var url = host + "/v4/openim/jsonvideoapp?sdkappid=" + sdkAppID + "&identifier=" + userID + "&usersig=" + userSig + "&random=9999&contenttype=json";
+      var host = this.data.useCloud ? 'https://official.opensso.tencent-cloud.com' : 'https://yun.tim.qq.com';
+      var url =
+        host +
+        '/v4/openim/jsonvideoapp?sdkappid=' +
+        sdkAppID +
+        '&identifier=' +
+        userID +
+        '&usersig=' +
+        userSig +
+        '&random=9999&contenttype=json';
 
       var reqHead = {
-        "Cmd": 1,
-        "SeqNo": Math.round(Math.random() * 100000),
-        "BusType": 7,
-        "GroupId": roomID
+        Cmd: 1,
+        SeqNo: Math.round(Math.random() * 100000),
+        BusType: 7,
+        GroupId: roomID,
       };
 
       var reqBody = {
-        "PrivMapEncrypt": privMapEncrypt,
-        "TerminalType": 1,
-        "FromType": 3,
-        "SdkVersion": 26280566
+        PrivMapEncrypt: privMapEncrypt,
+        TerminalType: 1,
+        FromType: 3,
+        SdkVersion: 26280566,
       };
 
-      console.log("requestSigServer params:", url, reqHead, reqBody);
+      console.log('requestSigServer params:', url, reqHead, reqBody);
 
       wx.request({
         url: url,
         data: {
-          "ReqHead": reqHead,
-          "ReqBody": reqBody
+          ReqHead: reqHead,
+          ReqBody: reqBody,
         },
-        method: "POST",
-        success: function (res) {
-          console.log("requestSigServer success:", res);
-          if (res.data["RspHead"]["ErrorCode"] != 0) {
+        method: 'POST',
+        success: function(res) {
+          console.log('requestSigServer success:', res);
+          if (res.data['RspHead']['ErrorCode'] != 0) {
             self.postErrorEvent(CONSTANT.ROOM.ERROR_REQUEST_ROOM_SIG, '获取推流地址错误');
             return;
           }
 
-
-          var roomSig = JSON.stringify(res.data["RspBody"]);
-          var pushUrl = `room://cloud.tencent.com?sdkappid=${sdkAppID}&roomid=${roomID}&userid=${userID}&roomsig=${encodeURIComponent(roomSig)}`;
-          console.log("roomSigInfo", roomID, userID, roomSig, pushUrl);
+          var roomSig = JSON.stringify(res.data['RspBody']);
+          var pushUrl = `room://cloud.tencent.com?sdkappid=${sdkAppID}&roomid=${roomID}&userid=${userID}&roomsig=${encodeURIComponent(
+            roomSig,
+          )}`;
+          console.log('roomSigInfo', roomID, userID, roomSig, pushUrl);
 
           // 如果有配置纯音频推流或者recordId参数
           if (self.data.pureAudioPushMod || self.data.recordId) {
             var bizbuf = {
               Str_uc_params: {
                 pure_audio_push_mod: 0,
-                record_id: 0
-              }
-            }
+                record_id: 0,
+              },
+            };
             // 纯音频推流
             if (self.data.pureAudioPushMod) {
-              bizbuf.Str_uc_params.pure_audio_push_mod = self.data.pureAudioPushMod
+              bizbuf.Str_uc_params.pure_audio_push_mod = self.data.pureAudioPushMod;
             } else {
               delete bizbuf.Str_uc_params.pure_audio_push_mod;
             }
 
             // 自动录制时业务自定义id
             if (self.data.recordId) {
-              bizbuf.Str_uc_params.record_id = self.data.recordId
+              bizbuf.Str_uc_params.record_id = self.data.recordId;
             } else {
               delete bizbuf.Str_uc_params.record_id;
             }
             pushUrl += '&bizbuf=' + encodeURIComponent(JSON.stringify(bizbuf));
           }
 
-          self.setData({
-            originPushURL: pushUrl,
-            pushURL: pushUrl + '&tx_time=' + new Date().getTime()
-          }, () => {
-
-          });
+          self.setData(
+            {
+              originPushURL: pushUrl,
+              pushURL: pushUrl + '&tx_time=' + new Date().getTime(),
+            },
+            () => {},
+          );
         },
-        fail: function (res) {
+        fail: function(res) {
           self.postErrorEvent(CONSTANT.ROOM.ERROR_REQUEST_ROOM_SIG, '获取推流地址错误');
-        }
-      })
+        },
+      });
     },
 
-    onWebRTCUserListPush: function (msg) {
+    onWebRTCUserListPush: function(msg) {
       if (!msg) {
         return;
       }
@@ -462,36 +484,41 @@ Component({
         member.userID && currentMemberIds.push(member.userID);
       });
 
-      if (currentMemberIds.length === 0) { // 第一次进入
-        if (newUserList.length >= self.data.maxMembers + 1) { // 当前返回的player成员列表,超过了房间的最大人数，则说明该用户超员了
-          self.postErrorEvent(CONSTANT.ROOM.ERROR_EXCEEDS_THE_MAX_MEMBER,
-            `当前房间超过最大人数${self.data.maxMembers + 1}，请重新进入其他房间体验~`);
+      if (currentMemberIds.length === 0) {
+        // 第一次进入
+        if (newUserList.length >= self.data.maxMembers + 1) {
+          // 当前返回的player成员列表,超过了房间的最大人数，则说明该用户超员了
+          self.postErrorEvent(
+            CONSTANT.ROOM.ERROR_EXCEEDS_THE_MAX_MEMBER,
+            `当前房间超过最大人数${self.data.maxMembers + 1}，请重新进入其他房间体验~`,
+          );
           self.stop();
           return;
         }
       }
 
       var pushers = [];
-      newUserList && newUserList.forEach(function (val) {
-        var pusher = {
-          userID: val.userid,
-          accelerateURL: val.playurl
-        };
-        pushers.push(pusher);
-      });
+      newUserList &&
+        newUserList.forEach(function(val) {
+          var pusher = {
+            userID: val.userid,
+            accelerateURL: val.playurl,
+          };
+          pushers.push(pusher);
+        });
 
       self.onPusherJoin({
-        pushers: pushers
+        pushers: pushers,
       });
 
       self.onPusherQuit({
-        pushers: pushers
+        pushers: pushers,
       });
     },
 
     //将在res.pushers中，但不在self.data.members中的流，加入到self.data.members中
-    onPusherJoin: function (res) {
-      res.pushers.forEach(function (val) {
+    onPusherJoin: function(res) {
+      res.pushers.forEach(function(val) {
         var emptyIndex = -1;
         var hasPlay = false;
         for (var i = 0; self.data.members && i < self.data.members.length; i++) {
@@ -514,12 +541,12 @@ Component({
       });
 
       self.setData({
-        members: self.data.members
+        members: self.data.members,
       });
     },
 
     //将在self.data.members中，但不在res.pushers中的流删除
-    onPusherQuit: function (res) {
+    onPusherQuit: function(res) {
       for (var i = 0; i < self.data.members.length; i++) {
         var needDelete = true;
         for (var j = 0; j < res.pushers.length; j++) {
@@ -533,12 +560,12 @@ Component({
       }
 
       self.setData({
-        members: self.data.members
+        members: self.data.members,
       });
     },
 
     //删除res.pushers
-    delPusher: function (pusher) {
+    delPusher: function(pusher) {
       for (var i = 0; i < self.data.members.length; i++) {
         if (self.data.members[i].userID == pusher.userID) {
           var player = wx.createLivePlayerContext(pusher.userID, self);
@@ -547,12 +574,12 @@ Component({
         }
       }
       self.setData({
-        members: self.data.members
+        members: self.data.members,
       });
     },
 
     // 推流事件
-    onPush: function (e) {
+    onPush: function(e) {
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
@@ -635,7 +662,7 @@ Component({
     },
 
     // 标签错误处理
-    onError: function (e) {
+    onError: function(e) {
       console.log('推流错误：', e);
       var errorCode = (e.detail && e.detail.errCode) || (e.details && e.details.errCode);
       var errorMsg = '';
@@ -647,16 +674,20 @@ Component({
           errorMsg = '未获取到录音功能权限，请删除小程序后重新打开';
           break;
       }
-      self.postErrorEvent(CONSTANT.ROOM.ERROR_CAMERA_MIC_PERMISSION, errorMsg || '未获取到摄像头、录音功能权限，请删除小程序后重新打开');
+      self.postErrorEvent(
+        CONSTANT.ROOM.ERROR_CAMERA_MIC_PERMISSION,
+        errorMsg || '未获取到摄像头、录音功能权限，请删除小程序后重新打开',
+      );
     },
 
     //播放器live-player回调
-    onPlay: function (e) {
-
-      self.data.members.forEach(function (val) {
+    onPlay: function(e) {
+      self.data.members.forEach(function(val) {
         // 如果是1v1 则使用固定的playid
-        if ((self.data['1v1Templates'].indexOf(self.data.template) > -1 && e.currentTarget.id === self.data.fixPlayId) ||
-          (e.currentTarget.id == val.userID)) {
+        if (
+          (self.data['1v1Templates'].indexOf(self.data.template) > -1 && e.currentTarget.id === self.data.fixPlayId) ||
+          e.currentTarget.id == val.userID
+        ) {
           switch (e.detail.code) {
             case 2007: {
               console.log('视频播放loading: ', e);
@@ -670,7 +701,7 @@ Component({
               val.loading = false;
               setTimeout(() => {
                 self.setData({
-                  startPlay: true
+                  startPlay: true,
                 });
               }, 500);
               break;
@@ -690,7 +721,7 @@ Component({
       });
 
       self.setData({
-        members: self.data.members
+        members: self.data.members,
       });
     },
 
@@ -705,56 +736,58 @@ Component({
 
         // 监听新消息(直播聊天室)事件，直播场景下必填
         onBigGroupMsgNotify(msgs) {
-          if (msgs.length) { // 如果有消息才处理
+          if (msgs.length) {
+            // 如果有消息才处理
             self.fireIMEvent(CONSTANT.IM.BIG_GROUP_MSG_NOTIFY, 0, CircularJSON.stringify(msgs));
           }
         },
 
         // 监听新消息函数，必填
         onMsgNotify(msgs) {
-          if (msgs.length) { // 如果有消息才处理
+          if (msgs.length) {
+            // 如果有消息才处理
             self.fireIMEvent(CONSTANT.IM.MSG_NOTIFY, 0, CircularJSON.stringify(msgs));
           }
         },
 
         // 系统消息
         onGroupSystemNotifys: {
-          "1": (notify) => {
+          '1': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 1, notify);
           }, //申请加群请求（只有管理员会收到）
-          "2": (notify) => {
+          '2': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 2, notify);
           }, //申请加群被同意（只有申请人能够收到）
-          "3": (notify) => {
+          '3': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 3, notify);
           }, //申请加群被拒绝（只有申请人能够收到）
-          "4": (notify) => {
+          '4': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 4, notify);
           }, //被管理员踢出群(只有被踢者接收到)
-          "5": (notify) => {
+          '5': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 5, notify);
           }, //群被解散(全员接收)
-          "6": (notify) => {
+          '6': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 6, notify);
           }, //创建群(创建者接收)
-          "7": (notify) => {
+          '7': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 7, notify);
           }, //邀请加群(被邀请者接收)
-          "8": (notify) => {
+          '8': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 8, notify);
           }, //主动退群(主动退出者接收)
-          "9": (notify) => {
+          '9': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 9, notify);
           }, //设置管理员(被设置者接收)
-          "10": (notify) => {
+          '10': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 10, notify);
           }, //取消管理员(被取消者接收)
-          "11": (notify) => {
+          '11': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 11, notify);
           }, //群已被回收(全员接收)
-          "255": (notify) => {
+          '255': (notify) => {
             self.fireIMErrorEvent(CONSTANT.IM.GROUP_SYSTEM_NOTIFYS, 255, notify);
-          } //用户自定义通知(默认全员接收)
+          }, //用户自定义通知(默认全员接收)
         },
 
         // 监听群资料变化事件，选填
@@ -765,14 +798,14 @@ Component({
         // 被踢下线
         onKickedEventCall() {
           self.fireIMErrorEvent(CONSTANT.IM.KICKED);
-        }
-      }
+        },
+      };
     },
 
     /**
      * 发送C2C文本消息
-     * @param {string} msg 
-     * @param {function} succ 
+     * @param {string} msg
+     * @param {function} succ
      * @param {function} fail
      */
     sendC2CTextMsg(receiveUser, msg, succ, fail) {
@@ -791,8 +824,8 @@ Component({
 
     /**
      * 发送群组文本消息
-     * @param {string} msg 
-     * @param {function} succ 
+     * @param {string} msg
+     * @param {function} succ
      * @param {function} fail
      */
     sendGroupTextMsg(msg, succ, fail) {
@@ -812,19 +845,19 @@ Component({
     /**
      * IM错误信息
      */
-    fireIMErrorEvent: function (errCode, errMsg) {
+    fireIMErrorEvent: function(errCode, errMsg) {
       self.fireIMEvent('error', errCode, errMsg);
     },
 
     /**
      * 触发IM信息
      */
-    fireIMEvent: function (tag, code, detail) {
+    fireIMEvent: function(tag, code, detail) {
       self.triggerEvent('IMEvent', {
         tag: tag,
         code: code,
-        detail: detail
+        detail: detail,
       });
-    }
-  }
-})
+    },
+  },
+});

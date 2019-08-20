@@ -3,9 +3,7 @@ Component({
   /**
    * 组件的属性列表
    */
-  properties: {
-
-  },
+  properties: {},
 
   /**
    * 组件的初始数据
@@ -13,8 +11,8 @@ Component({
   data: {
     isShow: false,
     code: null,
-    sureCallback: function () {},
-    cancelCallback: function () {},
+    sureCallback: function() {},
+    cancelCallback: function() {},
     title: '',
     content: '',
     cancelText: '取消',
@@ -35,12 +33,7 @@ Component({
       this.hide();
     },
 
-    show({
-      title,
-      content,
-      cancelText,
-      sureText
-    }, sure = function () {}, cancel = function () {}) {
+    show({ title, content, cancelText, sureText }, sure = function() {}, cancel = function() {}) {
       // if (this.data.isShow) {
       //   return;
       // }
@@ -51,7 +44,7 @@ Component({
         sureText,
         sureCallback: sure,
         cancelCallback: cancel,
-        isShow: true
+        isShow: true,
       });
     },
 
@@ -62,11 +55,11 @@ Component({
           content: '',
           cancelText: null,
           sureText: null,
-          sureCallback: function () {},
-          cancelCallback: function () {},
-          isShow: false
+          sureCallback: function() {},
+          cancelCallback: function() {},
+          isShow: false,
         });
       }, 100);
-    }
-  }
-})
+    },
+  },
+});

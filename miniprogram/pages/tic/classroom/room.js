@@ -42,8 +42,8 @@ Page({
   onReady(options) {
     // 保持屏幕常亮
     wx.setKeepScreenOn({
-      keepScreenOn: true
-    })
+      keepScreenOn: true,
+    });
   },
 
   onLoad(options) {
@@ -68,15 +68,18 @@ Page({
     if (this.data.isJoinClassroom) {
       this.quitClassroom();
     }
-    this.txTic.logout(() => {
-      // this.showToast('注销成功');
-    }, error => {
-      // this.showErrorToast('注销失败', error);
-    });
+    this.txTic.logout(
+      () => {
+        // this.showToast('注销成功');
+      },
+      (error) => {
+        // this.showErrorToast('注销失败', error);
+      },
+    );
   },
 
   init() {
-    this.txTic.init(this.data.sdkAppId, res => {
+    this.txTic.init(this.data.sdkAppId, (res) => {
       if (res.code) {
         this.showErrorToast('初始化失败，code:' + res.code + ' msg:' + res.desc);
       } else {
@@ -87,44 +90,48 @@ Page({
 
   // 登录
   login() {
-    this.txTic.login({
-      userId: this.data.identifier,
-      userSig: this.data.userSig
-    }, (res) => {
-      if (res.code) {
-        this.showErrorToast('登录失败', error);
-        wx.navigateBack({
-          delta: 1
-        });
-      } else {
-        this.showToast('登录成功');
-        // 增加事件监听
-        this.addTICMessageListener();
-        this.addTICEventListener();
-        this.addTICStatusListener();
-        if (this.data.isTeacher) {
-          // 老师就创建课堂
-          this.createClassroom();
-        } else { // 如果是学生
-          // 有了课堂后就直接加入
-          this.joinClassroom();
+    this.txTic.login(
+      {
+        userId: this.data.identifier,
+        userSig: this.data.userSig,
+      },
+      (res) => {
+        if (res.code) {
+          this.showErrorToast('登录失败', error);
+          wx.navigateBack({
+            delta: 1,
+          });
+        } else {
+          this.showToast('登录成功');
+          // 增加事件监听
+          this.addTICMessageListener();
+          this.addTICEventListener();
+          this.addTICStatusListener();
+          if (this.data.isTeacher) {
+            // 老师就创建课堂
+            this.createClassroom();
+          } else {
+            // 如果是学生
+            // 有了课堂后就直接加入
+            this.joinClassroom();
+          }
         }
-      }
-    });
+      },
+    );
   },
 
   createClassroom() {
     this.txTic.createClassroom(this.data.roomID, (res) => {
       if (res.code) {
         this.showErrorToast('创建课堂失败,请换一个房间号试试', res.desc);
-        setTimeout(function () {
+        setTimeout(function() {
           wx.navigateBack({
-            delta: 1
+            delta: 1,
           });
         }, 2000);
       } else {
         this.showToast('创建课堂成功');
-        this.joinClassroom()
+        this.joinClassroom();
       }
     });
   },
@@ -133,25 +140,29 @@ Page({
    * 进入课堂
    */
   joinClassroom() {
-    this.txTic.joinClassroom(this.data.roomID, {
-      brushColor: '#ff00ff',
-      ratio: '16:9'
-    }, (res) => {
-      // 加入课堂失败
-      if (res.code) {
-        this.showErrorToast('加入课堂失败,课堂还不存在', res.desc);
-        setTimeout(function () {
-          wx.navigateBack({
-            delta: 1
-          });
-        }, 2000);
-      } else {
-        this.data.isJoinClassroom = true;
-        this.data.teduBoard = this.txTic.getBoardInstance();
-        this.initBoardEvent();
-        this.startRTC();
-      }
-    });
+    this.txTic.joinClassroom(
+      this.data.roomID,
+      {
+        brushColor: '#ff00ff',
+        ratio: '16:9',
+      },
+      (res) => {
+        // 加入课堂失败
+        if (res.code) {
+          this.showErrorToast('加入课堂失败,课堂还不存在', res.desc);
+          setTimeout(function() {
+            wx.navigateBack({
+              delta: 1,
+            });
+          }, 2000);
+        } else {
+          this.data.isJoinClassroom = true;
+          this.data.teduBoard = this.txTic.getBoardInstance();
+          this.initBoardEvent();
+          this.startRTC();
+        }
+      },
+    );
   },
 
   // 退出课堂
@@ -179,7 +190,7 @@ Page({
       onTICRecvTextMessage: (fromUserId, text, textLen) => {
         this.updateChatMsg({
           send: fromUserId + '：',
-          content: text
+          content: text,
         });
       },
 
@@ -192,7 +203,7 @@ Page({
       onTICRecvCustomMessage: (fromUserId, data, textLen) => {
         this.updateChatMsg({
           send: fromUserId + '：',
-          content: data
+          content: data,
         });
       },
 
@@ -205,7 +216,7 @@ Page({
       onTICRecvGroupTextMessage: (fromUserId, text, textLen) => {
         this.updateChatMsg({
           send: fromUserId + '：',
-          content: text
+          content: text,
         });
       },
 
@@ -218,7 +229,7 @@ Page({
       onTICRecvGroupCustomMessage: (fromUserId, data, textLen) => {
         this.updateChatMsg({
           send: fromUserId + '：',
-          content: data
+          content: data,
         });
       },
 
@@ -227,9 +238,7 @@ Page({
        * @param msg	IM消息体
        * @note 所有收到的消息都会在此回调进行通知，包括前面已经封装的文本和自定义消息（白板信令消息除外）
        */
-      onTICRecvMessage(msg) {
-
-      }
+      onTICRecvMessage(msg) {},
     });
   },
 
@@ -238,23 +247,24 @@ Page({
       onTICMemberJoin: (members) => {
         this.updateChatMsg({
           send: '群消息提示：',
-          content: members.join(',') + '进入课堂'
+          content: members.join(',') + '进入课堂',
         });
       },
 
       onTICMemberQuit: (members) => {
         this.updateChatMsg({
           send: '群消息提示：',
-          content: members.join(',') + '退出课堂'
+          content: members.join(',') + '退出课堂',
         });
       },
 
       onTICClassroomDestroy: () => {
-        if (!this.isTeacher) { // 学生处理
+        if (!this.isTeacher) {
+          // 学生处理
           this.quitClassroom();
           this.showToast(`老师解散了课堂`);
         }
-      }
+      },
     });
   },
 
@@ -262,7 +272,7 @@ Page({
     this.txTic.addTICStatusListener({
       onTICForceOffline: () => {
         this.showErrorToast('被踢下线');
-      }
+      },
     });
   },
 
@@ -339,7 +349,16 @@ Page({
 
     // 上传背景图片的回调
     this.data.teduBoard.on(CONSTANT.EVENT.BOARD.TEB_SETBACKGROUNDIMAGE, (fileName, fileUrl, userData) => {
-      console.log('======================:  ', 'TEB_SETBACKGROUNDIMAGE', '  fileName:', fileName, '  fileUrl:', fileUrl, ' userData:', userData);
+      console.log(
+        '======================:  ',
+        'TEB_SETBACKGROUNDIMAGE',
+        '  fileName:',
+        fileName,
+        '  fileUrl:',
+        fileUrl,
+        ' userData:',
+        userData,
+      );
     });
 
     // 文件上传进度
@@ -355,24 +374,30 @@ Page({
 
   // 开始RTC
   startRTC() {
-    this.setData({
-      userID: this.data.identifier,
-      userSig: this.data.userSig,
-      sdkAppID: this.data.sdkAppId,
-      roomID: this.data.roomID
-    }, () => {
-      this.webrtcroomComponent.start();
-    });
+    this.setData(
+      {
+        userID: this.data.identifier,
+        userSig: this.data.userSig,
+        sdkAppID: this.data.sdkAppId,
+        roomID: this.data.roomID,
+      },
+      () => {
+        this.webrtcroomComponent.start();
+      },
+    );
   },
 
   updateChatMsg(msg) {
-    this.setData({
-      msgList: this.data.msgList.concat([msg])
-    }, () => {
-      this.setData({
-        scrollToView: 'scroll-bottom' // 滚动条置底
-      });
-    });
+    this.setData(
+      {
+        msgList: this.data.msgList.concat([msg]),
+      },
+      () => {
+        this.setData({
+          scrollToView: 'scroll-bottom', // 滚动条置底
+        });
+      },
+    );
   },
 
   /**
@@ -387,38 +412,37 @@ Page({
           return;
         }
 
-        if (e.detail.code === -10) { // 进房失败，一般为网络切换的过程中
+        if (e.detail.code === -10) {
+          // 进房失败，一般为网络切换的过程中
           this.data.isErrorModalShow = true;
           wx.showModal({
             title: '提示',
             content: e.detail.detail,
             confirmText: '重试',
             cancelText: '退出',
-            success: function (res) {
-
-            }
+            success: function(res) {},
           });
         } else {
           var pages = getCurrentPages();
           console.log(pages, pages.length, pages[pages.length - 1].__route__);
-          if (pages.length > 1 && (pages[pages.length - 1].__route__ == 'pages/index/index')) {
+          if (pages.length > 1 && pages[pages.length - 1].__route__ == 'pages/index/index') {
             this.data.isErrorModalShow = true;
             wx.showModal({
               title: '提示',
               content: e.detail.detail,
               showCancel: false,
-              complete: function () {
-                self.data.isErrorModalShow = false
+              complete: function() {
+                self.data.isErrorModalShow = false;
                 pages = getCurrentPages();
-                if (pages.length > 1 && (pages[pages.length - 1].__route__ == 'pages/index/index')) {
+                if (pages.length > 1 && pages[pages.length - 1].__route__ == 'pages/index/index') {
                   wx.showToast({
-                    title: `code:${e.detail.code} content:${e.detail.detail}`
+                    title: `code:${e.detail.code} content:${e.detail.detail}`,
                   });
                   wx.navigateBack({
-                    delta: 1
+                    delta: 1,
                   });
                 }
-              }
+              },
             });
           }
         }
@@ -427,7 +451,7 @@ Page({
   },
 
   // IM输入框的信息
-  bindChatMsg: function (e) {
+  bindChatMsg: function(e) {
     this.data.chatMsg = e.detail.value;
   },
 
@@ -438,15 +462,19 @@ Page({
       this.showErrorToast('不能发送空消息');
       return;
     }
-    this.txTic.sendGroupTextMessage(msg, () => {
-      console.log('消息发送成功');
-      // 发送成功
-      this.setData({
-        chatMsg: ''
-      });
-    }, (error) => {
-      this.showErrorToast('消息发送失败', error);
-    });
+    this.txTic.sendGroupTextMessage(
+      msg,
+      () => {
+        console.log('消息发送成功');
+        // 发送成功
+        this.setData({
+          chatMsg: '',
+        });
+      },
+      (error) => {
+        this.showErrorToast('消息发送失败', error);
+      },
+    );
   },
 
   /**
@@ -454,7 +482,7 @@ Page({
    */
   showBoardPanel() {
     this.setData({
-      isShowBoardPanel: true
+      isShowBoardPanel: true,
     });
   },
 
@@ -463,22 +491,27 @@ Page({
    */
   showChatPanel() {
     this.setData({
-      isShowBoardPanel: false
+      isShowBoardPanel: false,
     });
   },
 
   // 切换白板全屏显示
   togglerBoardFullScreen() {
     var boardShowFullScreen = !this.data.boardShowFullScreen;
-    this.setData({
-      boardShowFullScreen: boardShowFullScreen
-    }, () => {
-      if (boardShowFullScreen) { // 全屏显示，则切换到横屏方式
-        this.txTic.setOrientation('horizontal');
-      } else { // 垂直方向
-        this.txTic.setOrientation('vertical');
-      }
-    });
+    this.setData(
+      {
+        boardShowFullScreen: boardShowFullScreen,
+      },
+      () => {
+        if (boardShowFullScreen) {
+          // 全屏显示，则切换到横屏方式
+          this.txTic.setOrientation('horizontal');
+        } else {
+          // 垂直方向
+          this.txTic.setOrientation('vertical');
+        }
+      },
+    );
   },
 
   uploadFile() {
@@ -498,35 +531,35 @@ Page({
             path,
             type,
             name,
-            userData: 'hello'
+            userData: 'hello',
           });
         }
-      }
-    })
+      },
+    });
   },
 
   /**
    * 显示信息弹窗
-   * @param {*} msg 
-   * @param {*} error 
+   * @param {*} msg
+   * @param {*} error
    */
   showToast(msg) {
     wx.showToast({
       icon: 'none',
-      title: msg
+      title: msg,
     });
   },
 
   /**
    * 显示错误信息弹窗
-   * @param {*} msg 
-   * @param {*} error 
+   * @param {*} msg
+   * @param {*} error
    */
   showErrorToast(msg, error) {
     wx.showToast({
       icon: 'none',
-      title: msg
+      title: msg,
     });
     console.error('Error msg:', error || msg);
-  }
-})
+  },
+});

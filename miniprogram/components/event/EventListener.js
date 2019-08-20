@@ -23,11 +23,11 @@ var EventListener = {
   },
 
   fireEvent(eventName, ...data) {
-    this.listenerList.forEach(listener => {
+    this.listenerList.forEach((listener) => {
       var callback = listener[eventName];
-      callback && callback(...data)
+      callback && callback(...data);
     });
-  }
-}
+  },
+};
 
 module.exports = EventListener;

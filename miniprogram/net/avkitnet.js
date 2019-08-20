@@ -1,16 +1,14 @@
-function AvKitRequest() {
+function AvKitRequest() {}
 
-}
-
-AvKitRequest.prototype.post = function (url, data, loadingTitle) {
+AvKitRequest.prototype.post = function(url, data, loadingTitle) {
   return this.request('POST', url, data, loadingTitle);
-}
+};
 
-AvKitRequest.prototype.get = function (url, data, loadingTitle) {
+AvKitRequest.prototype.get = function(url, data, loadingTitle) {
   return this.request('GET', url, data, loadingTitle);
-}
+};
 
-AvKitRequest.prototype.request = function (method = 'POST', url, data = {}, loadingTitle) {
+AvKitRequest.prototype.request = function(method = 'POST', url, data = {}, loadingTitle) {
   return new Promise((resolve, reject) => {
     if (loadingTitle) {
       wx.showLoading({
@@ -21,7 +19,7 @@ AvKitRequest.prototype.request = function (method = 'POST', url, data = {}, load
       method: method,
       url: url,
       header: {
-        'content-type': 'application/json' // 默认值
+        'content-type': 'application/json', // 默认值
       },
       data: data,
       success(res) {
@@ -29,11 +27,11 @@ AvKitRequest.prototype.request = function (method = 'POST', url, data = {}, load
         resolve(res);
       },
       fail(error) {
-        loadingTitle && wx.hideLoading()
+        loadingTitle && wx.hideLoading();
         reject(error);
-      }
-    })
+      },
+    });
   });
-}
+};
 
-module.exports = new AvKitRequest;
+module.exports = new AvKitRequest();

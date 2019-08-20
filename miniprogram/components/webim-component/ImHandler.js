@@ -6,34 +6,44 @@ var ImHandler = {
   // 聊天房间的session
   selSess: null,
 
-  sendMsgFailMap: {
-
-  },
+  sendMsgFailMap: {},
 
   /**
    * 传输白板数据
-   * @param {*} content 
+   * @param {*} content
    */
   sendBoardGroupCustomMessage(content) {
-    var msg = new webim.Msg(this.selSess, true, -1, Math.round(Math.random() * 4294967296),
-      new Date().getTime(), ImHandler.userId, webim.GROUP_MSG_SUB_TYPE.COMMON, ImHandler.userId);
+    var msg = new webim.Msg(
+      this.selSess,
+      true,
+      -1,
+      Math.round(Math.random() * 4294967296),
+      new Date().getTime(),
+      ImHandler.userId,
+      webim.GROUP_MSG_SUB_TYPE.COMMON,
+      ImHandler.userId,
+    );
     var custom = new webim.Msg.Elem.Custom(content, '', 'TXWhiteBoardExt');
     msg.addCustom(custom);
     msg.PushInfoBoolean = true;
     msg.PushInfo = {
       Ext: 'TXWhiteBoardExt',
-      PushFlag: 0
+      PushFlag: 0,
     };
-    webim.sendMsg(msg, (resp) => {
-      console.log(resp);
-    }, (error) => {
-      this.retrySendBoardGroupCustomMessage(msg);
-    });
+    webim.sendMsg(
+      msg,
+      (resp) => {
+        console.log(resp);
+      },
+      (error) => {
+        this.retrySendBoardGroupCustomMessage(msg);
+      },
+    );
   },
 
   /**
    * 重试逻辑
-   * @param {*} msg 
+   * @param {*} msg
    */
   retrySendBoardGroupCustomMessage(msg) {
     // 重试3次
@@ -41,11 +51,15 @@ var ImHandler = {
       return;
     }
     this.sendMsgFailMap[msg.seq + ''] = (this.sendMsgFailMap[msg.seq + ''] || 0) + 1;
-    webim.sendMsg(msg, function (resp) {
-      console.log(resp);
-    }, (error) => {
-      this.retrySendBoardGroupCustomMessage(msg);
-    })
+    webim.sendMsg(
+      msg,
+      function(resp) {
+        console.log(resp);
+      },
+      (error) => {
+        this.retrySendBoardGroupCustomMessage(msg);
+      },
+    );
   },
 
   /**
@@ -75,7 +89,7 @@ var ImHandler = {
     var text_obj, face_obj, tmsg, emotionIndex, emotion, restMsgIndex;
 
     //解析文本和表情
-    var expr = /\[[^[\]]{1,3}\]/mg;
+    var expr = /\[[^[\]]{1,3}\]/gm;
     var emotions = msgText.match(expr);
     if (!emotions || emotions.length < 1) {
       text_obj = new webim.Msg.Elem.Text(msgText);
@@ -105,13 +119,16 @@ var ImHandler = {
       }
     }
 
-    webim.sendMsg(msg, function (resp) {
-      succ && succ();
-    }, function (err) {
-      fail && fail(err);
-    });
+    webim.sendMsg(
+      msg,
+      function(resp) {
+        succ && succ();
+      },
+      function(err) {
+        fail && fail(err);
+      },
+    );
   },
-
 
   /**
    * 发送自定义消息
@@ -142,11 +159,15 @@ var ImHandler = {
     var custom_obj = new webim.Msg.Elem.Custom(msgText);
     msg.addCustom(custom_obj);
     //调用发送消息接口
-    webim.sendMsg(msg, function (resp) {
-      succ && succ();
-    }, function (err) {
-      fail && fail(err);
-    });
+    webim.sendMsg(
+      msg,
+      function(resp) {
+        succ && succ();
+      },
+      function(err) {
+        fail && fail(err);
+      },
+    );
   },
 
   /**
@@ -157,18 +178,30 @@ var ImHandler = {
   },
 
   sendBoardMsg(data) {
-    var msg = new webim.Msg(this.selSess, true, -1, Math.round(Math.random() * 4294967296),
-      new Date().getTime(), this.userId, webim.GROUP_MSG_SUB_TYPE.COMMON, this.userId);
+    var msg = new webim.Msg(
+      this.selSess,
+      true,
+      -1,
+      Math.round(Math.random() * 4294967296),
+      new Date().getTime(),
+      this.userId,
+      webim.GROUP_MSG_SUB_TYPE.COMMON,
+      this.userId,
+    );
     var custom = new webim.Msg.Elem.Custom(JSON.stringify(data), '', 'TXWhiteBoardExt');
     msg.addCustom(custom);
     msg.PushInfoBoolean = true;
     msg.PushInfo = {
       Ext: 'TXWhiteBoardExt',
-      PushFlag: 0
+      PushFlag: 0,
     };
-    webim.sendMsg(msg, (resp) => {}, (error) => {
-      this.retrySendBoardGroupCustomMessage(msg);
-    });
+    webim.sendMsg(
+      msg,
+      (resp) => {},
+      (error) => {
+        this.retrySendBoardGroupCustomMessage(msg);
+      },
+    );
   },
 
   retrySendBoardGroupCustomMessage(msg) {
@@ -177,11 +210,15 @@ var ImHandler = {
       return;
     }
     this.sendMsgFailMap[msg.seq + ''] = (this.sendMsgFailMap[msg.seq + ''] || 0) + 1;
-    webim.sendMsg(msg, function (resp) {
-      console.log(resp);
-    }, (error) => {
-      this.retrySendBoardGroupCustomMessage(msg);
-    })
-  }
+    webim.sendMsg(
+      msg,
+      function(resp) {
+        console.log(resp);
+      },
+      (error) => {
+        this.retrySendBoardGroupCustomMessage(msg);
+      },
+    );
+  },
 };
 module.exports = ImHandler;

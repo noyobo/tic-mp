@@ -9,7 +9,7 @@ function TICDataUtil() {
  * 腾讯视频云Demo中的PrivateMapKey获取接口
  * 业务侧需要自己实现
  */
-TICDataUtil.prototype.getPrivateMapKey = function (params) {
+TICDataUtil.prototype.getPrivateMapKey = function(params) {
   var privateMapKeyUrl = this.privateMapKeyUrl;
   wx.hideLoading();
   return new Promise((resolve, reject) => {
@@ -20,15 +20,15 @@ TICDataUtil.prototype.getPrivateMapKey = function (params) {
       method: 'POST',
       url: privateMapKeyUrl,
       header: {
-        'content-type': 'application/json' // 默认值
+        'content-type': 'application/json', // 默认值
       },
       data: {
-        "identifier": params.userID,
-        "pwd": "123", // 腾讯云DEMO接口鉴权密码
-        "appid": params.sdkAppID,
-        "accounttype": params.accountType,
-        "roomnum": Number(params.roomID), // 整型
-        "privMap": 255
+        identifier: params.userID,
+        pwd: '123', // 腾讯云DEMO接口鉴权密码
+        appid: params.sdkAppID,
+        accounttype: params.accountType,
+        roomnum: Number(params.roomID), // 整型
+        privMap: 255,
       },
       success(res) {
         wx.hideLoading();
@@ -39,11 +39,11 @@ TICDataUtil.prototype.getPrivateMapKey = function (params) {
         }
       },
       fail(error) {
-        wx.hideLoading()
+        wx.hideLoading();
         reject(error);
-      }
-    })
+      },
+    });
   });
-}
+};
 
 module.exports = new TICDataUtil();

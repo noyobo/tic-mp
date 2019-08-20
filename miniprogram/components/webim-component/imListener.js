@@ -14,8 +14,9 @@ var IMListeners = {
 
   // 监听新消息函数，必填
   onMsgNotify(msgs) {
-    if (msgs.length) { // 如果有消息才处理
-      msgs.forEach(msg => {
+    if (msgs.length) {
+      // 如果有消息才处理
+      msgs.forEach((msg) => {
         var sess = msg.getSession();
         var msgType = sess.type();
         // 如果是群组消息
@@ -30,7 +31,8 @@ var IMListeners = {
                 if (msg.getFromAccount() != ImHandler.userId) {
                   BoardListener.fireEvent('RECEIVE_BOARD_DATA', msg);
                 }
-              } else if (elems[0].type === 'TIMFileElem' && elems[0].content.name === 'TXWhiteBoardExt') { // 白板消息
+              } else if (elems[0].type === 'TIMFileElem' && elems[0].content.name === 'TXWhiteBoardExt') {
+                // 白板消息
                 if (msg.getFromAccount() != ImHandler.userId) {
                   BoardListener.fireEvent('RECEIVE_BOARD_FILE_DATA', msg);
                 }
@@ -39,7 +41,8 @@ var IMListeners = {
               }
             }
           }
-        } else { // 如果是C2C消息
+        } else {
+          // 如果是C2C消息
           IMListeners.parseMsg(msg);
         }
       });
@@ -48,26 +51,30 @@ var IMListeners = {
 
   parseMsg(msg) {
     var elems = msg.elems;
-    elems.forEach(elem => {
+    elems.forEach((elem) => {
       var content = elem.getContent();
-      if (msg.getFromAccount() === '@TIM#SYSTEM') { // 接收到系统消息
+      if (msg.getFromAccount() === '@TIM#SYSTEM') {
+        // 接收到系统消息
         var opType = content.getOpType(); // 通知类型
-        if (opType === webim.GROUP_TIP_TYPE.JOIN) { // 加群通知
+        if (opType === webim.GROUP_TIP_TYPE.JOIN) {
+          // 加群通知
           EventListener.fireEvent('onTICMemberJoin', elem.getContent().userIdList);
-        } else if (opType === webim.GROUP_TIP_TYPE.QUIT) { // 退群通知
+        } else if (opType === webim.GROUP_TIP_TYPE.QUIT) {
+          // 退群通知
           EventListener.fireEvent('onTICMemberQuit', [elem.getContent().opUserId]);
-        } else if (opType === webim.GROUP_TIP_TYPE.KICK) { // 踢人通知
-
-        } else if (opType === webim.GROUP_TIP_TYPE.SET_ADMIN) { // 设置管理员通知
-
-        } else if (opType === webim.GROUP_TIP_TYPE.CANCEL_ADMIN) { // 取消管理员通知
-
-        } else if (opType === webim.GROUP_TIP_TYPE.MODIFY_GROUP_INFO) { // 群资料变更
-
-        } else if (opType === webim.GROUP_TIP_TYPE.MODIFY_MEMBER_INFO) { //群成员资料变更
-
+        } else if (opType === webim.GROUP_TIP_TYPE.KICK) {
+          // 踢人通知
+        } else if (opType === webim.GROUP_TIP_TYPE.SET_ADMIN) {
+          // 设置管理员通知
+        } else if (opType === webim.GROUP_TIP_TYPE.CANCEL_ADMIN) {
+          // 取消管理员通知
+        } else if (opType === webim.GROUP_TIP_TYPE.MODIFY_GROUP_INFO) {
+          // 群资料变更
+        } else if (opType === webim.GROUP_TIP_TYPE.MODIFY_MEMBER_INFO) {
+          //群成员资料变更
         }
-      } else { // 接收到群聊天/C2C消息
+      } else {
+        // 接收到群聊天/C2C消息
         var type = elem.getType();
         if (type === 'TIMTextElem') {
           var text = '';
@@ -112,7 +119,7 @@ var IMListeners = {
     // },
 
     //群被解散(全员接收)
-    "5": (notify) => {
+    '5': (notify) => {
       EventListener.fireEvent('onTICClassroomDestroy');
     },
 
@@ -138,7 +145,7 @@ var IMListeners = {
     // },
 
     // //群已被回收(全员接收)
-    "11": (notify) => {
+    '11': (notify) => {
       EventListener.fireEvent('onTICClassroomDestroy');
     },
 
@@ -158,10 +165,10 @@ var IMListeners = {
   // 监听 C2C 消息通道的处理
   onC2cEventNotifys: {
     // 多终端互踢
-    "96": (notify) => {
+    '96': (notify) => {
       StatusListener.fireEvent('onTICForceOffline');
-    }
-  }
-}
+    },
+  },
+};
 
 module.exports = IMListeners;

@@ -15,17 +15,23 @@ module.exports = {
 
   /**
    * 登录IM
-   * @param {Function} success 
-   * @param {Function} fail 
+   * @param {Function} success
+   * @param {Function} fail
    */
   login(success, fail) {
     if (!webim.checkLogin()) {
-      webim.login(this.userData, IMListeners, {
-        isLogOn: false
-      }, () => {
-        ImHandler.userId = this.userData.userId;
-        success();
-      }, fail);
+      webim.login(
+        this.userData,
+        IMListeners,
+        {
+          isLogOn: false,
+        },
+        () => {
+          ImHandler.userId = this.userData.userId;
+          success();
+        },
+        fail,
+      );
     } else {
       ImHandler.userId = this.userData.userId;
       success();
@@ -43,31 +49,31 @@ module.exports = {
 
   /**
    * 创建房间
-   * @param {*} userId 
-   * @param {*} groupId 
+   * @param {*} userId
+   * @param {*} groupId
    */
   createRoom(userId, groupId) {
     var groupID = String(groupId);
     var groupType = 'Public';
 
     var options = {
-      'GroupId': groupId,
-      'Owner_Account': String(userId),
-      'Type': groupType,
-      'ApplyJoinOption': 'FreeAccess',
-      'Name': groupID,
-      'Notification': "",
-      'Introduction': "",
-      'MemberList': [],
+      GroupId: groupId,
+      Owner_Account: String(userId),
+      Type: groupType,
+      ApplyJoinOption: 'FreeAccess',
+      Name: groupID,
+      Notification: '',
+      Introduction: '',
+      MemberList: [],
     };
 
     return new Promise((resolve, reject) => {
       webim.createGroup(
         options,
-        function (resp) {
+        function(resp) {
           resolve(resp);
         },
-        function (err) {
+        function(err) {
           if (err.ErrorCode == 10025) {
             resolve(err);
           } else if (err.ErrorCode == 10021) {
@@ -75,7 +81,7 @@ module.exports = {
           } else {
             reject(err);
           }
-        }
+        },
       );
     });
   },
@@ -88,10 +94,11 @@ module.exports = {
    */
   joinGroup(groupId, succ, fail) {
     var self = this;
-    webim.applyJoinGroup({
-        GroupId: String(groupId)
+    webim.applyJoinGroup(
+      {
+        GroupId: String(groupId),
       },
-      function (resp) {
+      function(resp) {
         //JoinedSuccess:加入成功; WaitAdminApproval:等待管理员审批
         if (resp.JoinedStatus && resp.JoinedStatus == 'JoinedSuccess') {
           ImHandler.selSess = new webim.Session(webim.SESSION_TYPE.GROUP, groupId, groupId);
@@ -102,8 +109,9 @@ module.exports = {
           fail && fail(resp);
         }
       },
-      function (err) {
-        if (err.ErrorCode == 10013) { // 被邀请加入的用户已经是群成员,也表示成功
+      function(err) {
+        if (err.ErrorCode == 10013) {
+          // 被邀请加入的用户已经是群成员,也表示成功
           ImHandler.selSess = new webim.Session(webim.SESSION_TYPE.GROUP, groupId, groupId);
           self.groupData['groupId'] = groupId;
           ImHandler.classId = groupId;
@@ -113,32 +121,34 @@ module.exports = {
         if (fail) {
           fail(err);
         }
-      }
+      },
     );
   },
 
   /**
    * 退出课堂
-   * @param {*} succ 
-   * @param {*} fail 
+   * @param {*} succ
+   * @param {*} fail
    */
   quitGroup(groupId, succ, fail) {
-    webim.quitGroup({
-        GroupId: String(groupId)
+    webim.quitGroup(
+      {
+        GroupId: String(groupId),
       },
-      function () {
+      function() {
         succ && succ();
       },
-      function (error) {
+      function(error) {
         // 群不存在 或者 不在群里了 或者 群id不合法（一般这种情况是课堂销毁了groupId被重置后发生）
         if (error.ErrorCode === 10010 || error.ErrorCode === 10007 || error.ErrorCode === 10015) {
           succ && succ();
-        } else if (error.ErrorCode == 10009) { // 群主自己想退课堂
+        } else if (error.ErrorCode == 10009) {
+          // 群主自己想退课堂
           succ && succ();
         } else {
           fail && fail(error);
         }
-      }
+      },
     );
   },
 
@@ -146,15 +156,16 @@ module.exports = {
    * 销毁群组
    */
   destroyGroup(classId, succ, fail) {
-    webim.destroyGroup({
-        GroupId: classId + ''
+    webim.destroyGroup(
+      {
+        GroupId: classId + '',
       },
-      function (resp) {
+      function(resp) {
         succ && succ();
       },
-      function (err) {
+      function(err) {
         fail && fail(err);
-      }
+      },
     );
   },
 
@@ -190,4 +201,4 @@ module.exports = {
   sendBoardGroupCustomMessage(msg) {
     ImHandler.sendBoardGroupCustomMessage(JSON.stringify(msg));
   },
-}
+};

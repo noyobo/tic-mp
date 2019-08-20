@@ -13,7 +13,7 @@ module.exports = {
 
   /**
    * 初始化登录IM的监听函数
-   * @param {Object} loginListeners 
+   * @param {Object} loginListeners
    */
   initLoginListeners(loginListeners) {
     this.loginListeners = loginListeners;
@@ -21,14 +21,20 @@ module.exports = {
 
   /**
    * 登录IM
-   * @param {Function} success 
-   * @param {Function} fail 
+   * @param {Function} success
+   * @param {Function} fail
    */
   loginIm(success, fail) {
-    webim.login(this.userData, this.loginListeners, {
-      isAccessFormalEnv: true,
-      isLogOn: false
-    }, success, fail);
+    webim.login(
+      this.userData,
+      this.loginListeners,
+      {
+        isAccessFormalEnv: true,
+        isLogOn: false,
+      },
+      success,
+      fail,
+    );
   },
 
   /**
@@ -47,28 +53,28 @@ module.exports = {
    */
   createGroup(groupId, userID, succ, fail) {
     var options = {
-      'GroupId': String(groupId),
-      'Owner_Account': String(userID),
-      'Type': "AVChatRoom", //Private/Public/ChatRoom/AVChatRoom
-      'ApplyJoinOption': 'FreeAccess',
-      'Name': String(groupId),
-      'Notification': "",
-      'Introduction': "",
-      'MemberList': [],
+      GroupId: String(groupId),
+      Owner_Account: String(userID),
+      Type: 'AVChatRoom', //Private/Public/ChatRoom/AVChatRoom
+      ApplyJoinOption: 'FreeAccess',
+      Name: String(groupId),
+      Notification: '',
+      Introduction: '',
+      MemberList: [],
     };
 
     webim.createGroup(
       options,
-      function () {
+      function() {
         if (succ) succ();
       },
-      function (err) {
+      function(err) {
         if (err.ErrorCode == 10025 || err.ErrorCode == 10021) {
           if (succ) succ();
         } else {
           if (fail) fail(err);
         }
-      }
+      },
     );
   },
 
@@ -82,37 +88,44 @@ module.exports = {
     var self = this;
     this.selSess = null;
     // 先创建群，成功后加入群
-    this.createGroup(groupId, this.userData.identifier, () => {
-      webim.applyJoinBigGroup({
-          GroupId: String(groupId)
-        },
-        function (resp) {
-          //JoinedSuccess:加入成功; WaitAdminApproval:等待管理员审批
-          if (resp.JoinedStatus && resp.JoinedStatus == 'JoinedSuccess') {
-            self.groupData['groupId'] = groupId;
-            succ && succ(resp);
-          } else {
-            fail && fail(resp);
-          }
-        },
-        function (err) {
-          if (err.ErrorCode == 10013) { // 被邀请加入的用户已经是群成员,也表示成功
-            self.groupData['groupId'] = groupId;
-            console.warn('applyJoinGroupSucc', groupId)
-            return;
-          }
-          if (fail) {
-            fail(err);
-          }
-        }
-      );
-    }, fail);
+    this.createGroup(
+      groupId,
+      this.userData.identifier,
+      () => {
+        webim.applyJoinBigGroup(
+          {
+            GroupId: String(groupId),
+          },
+          function(resp) {
+            //JoinedSuccess:加入成功; WaitAdminApproval:等待管理员审批
+            if (resp.JoinedStatus && resp.JoinedStatus == 'JoinedSuccess') {
+              self.groupData['groupId'] = groupId;
+              succ && succ(resp);
+            } else {
+              fail && fail(resp);
+            }
+          },
+          function(err) {
+            if (err.ErrorCode == 10013) {
+              // 被邀请加入的用户已经是群成员,也表示成功
+              self.groupData['groupId'] = groupId;
+              console.warn('applyJoinGroupSucc', groupId);
+              return;
+            }
+            if (fail) {
+              fail(err);
+            }
+          },
+        );
+      },
+      fail,
+    );
   },
 
   /**
    * 发送C2C文本消息
-   * @param {string} msg 
-   * @param {function} succ 
+   * @param {string} msg
+   * @param {function} succ
    * @param {function} fail
    */
   sendC2CTextMsg(receiveUser, msg, succ, fail) {
@@ -129,11 +142,10 @@ module.exports = {
     this.sendCustomMsg(webim.SESSION_TYPE.C2C, toUser, msgObj, succ, fail);
   },
 
-
   /**
    * 发送群组文本消息
-   * @param {string} msg 
-   * @param {function} succ 
+   * @param {string} msg
+   * @param {function} succ
    * @param {function} fail
    */
   sendGroupTextMsg(msg, succ, fail) {
@@ -164,10 +176,10 @@ module.exports = {
         return;
       }
       maxLen = webim.MSG_MAX_LENGTH.C2C;
-      errInfo = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
+      errInfo = '消息长度超出限制(最多' + Math.round(maxLen / 3) + '汉字)';
     } else {
       maxLen = webim.MSG_MAX_LENGTH.GROUP;
-      errInfo = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
+      errInfo = '消息长度超出限制(最多' + Math.round(maxLen / 3) + '汉字)';
     }
 
     if (msgText.length < 1) {
@@ -198,11 +210,20 @@ module.exports = {
     var seq = -1; //消息序列，-1表示 SDK 自动生成，用于去重
     var random = Math.round(Math.random() * 4294967296); //消息随机数，用于去重
     var msgTime = this.getUnixTimestamp(); //消息时间戳
-    var msg = new webim.Msg(selSess, isSend, seq, random, msgTime, this.userData.identifier, subType, this.userData.identifierNick);
+    var msg = new webim.Msg(
+      selSess,
+      isSend,
+      seq,
+      random,
+      msgTime,
+      this.userData.identifier,
+      subType,
+      this.userData.identifierNick,
+    );
     var text_obj, face_obj, tmsg, emotionIndex, emotion, restMsgIndex;
 
     //解析文本和表情
-    var expr = /\[[^[\]]{1,3}\]/mg;
+    var expr = /\[[^[\]]{1,3}\]/gm;
     var emotions = msgText.match(expr);
     if (!emotions || emotions.length < 1) {
       text_obj = new webim.Msg.Elem.Text(msgText);
@@ -232,11 +253,15 @@ module.exports = {
       }
     }
 
-    webim.sendMsg(msg, function () {
-      succ && succ(msg);
-    }, function (err) {
-      fail && fail(-4, err);
-    });
+    webim.sendMsg(
+      msg,
+      function() {
+        succ && succ(msg);
+      },
+      function(err) {
+        fail && fail(-4, err);
+      },
+    );
   },
 
   /**
@@ -253,10 +278,10 @@ module.exports = {
         return;
       }
       maxLen = webim.MSG_MAX_LENGTH.C2C;
-      errInfo = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
+      errInfo = '消息长度超出限制(最多' + Math.round(maxLen / 3) + '汉字)';
     } else {
       maxLen = webim.MSG_MAX_LENGTH.GROUP;
-      errInfo = "消息长度超出限制(最多" + Math.round(maxLen / 3) + "汉字)";
+      errInfo = '消息长度超出限制(最多' + Math.round(maxLen / 3) + '汉字)';
     }
 
     var data = msgObj.data + '';
@@ -292,16 +317,29 @@ module.exports = {
     var random = Math.round(Math.random() * 4294967296); //消息随机数，用于去重
     var msgTime = this.getUnixTimestamp(); //消息时间戳
 
-    var msg = new webim.Msg(selSess, isSend, seq, random, msgTime, this.userData.identifier, subType, this.userData.identifierNick);
+    var msg = new webim.Msg(
+      selSess,
+      isSend,
+      seq,
+      random,
+      msgTime,
+      this.userData.identifier,
+      subType,
+      this.userData.identifierNick,
+    );
 
     var custom_obj = new webim.Msg.Elem.Custom(data, desc, ext);
     msg.addCustom(custom_obj);
     //调用发送消息接口
-    webim.sendMsg(msg, function () {
-      succ && succ(msg);
-    }, function (err) {
-      fail && fail(-4, err);
-    });
+    webim.sendMsg(
+      msg,
+      function() {
+        succ && succ(msg);
+      },
+      function(err) {
+        fail && fail(-4, err);
+      },
+    );
   },
 
   /**
@@ -314,7 +352,7 @@ module.exports = {
   /**
    * 组织自定义消息体
    * @param {*} msg 要发送的消息
-   * @param {*} succ 
+   * @param {*} succ
    */
   formatCustomMsg(msg) {
     // custom消息
@@ -323,7 +361,13 @@ module.exports = {
     var ext = msg.ext || '';
 
     if (!this.selSess) {
-      this.selSess = new webim.Session(this.groupData.sessionType, this.groupData.groupId, this.groupData.groupId, this.selSessHeadUrl, Math.round(new Date().getTime() / 1000));
+      this.selSess = new webim.Session(
+        this.groupData.sessionType,
+        this.groupData.groupId,
+        this.groupData.groupId,
+        this.selSessHeadUrl,
+        Math.round(new Date().getTime() / 1000),
+      );
     }
 
     var isSend = true; //是否为自己发送
@@ -343,7 +387,16 @@ module.exports = {
       //webim.C2C_MSG_SUB_TYPE.COMMON-普通消息,
       subType = webim.C2C_MSG_SUB_TYPE.COMMON;
     }
-    var msgObj = new webim.Msg(this.selSess, isSend, seq, random, msgTime, this.userData.identifier, subType, this.userData.identifierNick);
+    var msgObj = new webim.Msg(
+      this.selSess,
+      isSend,
+      seq,
+      random,
+      msgTime,
+      this.userData.identifier,
+      subType,
+      this.userData.identifierNick,
+    );
 
     var custom_obj = new webim.Msg.Elem.Custom(data, desc, ext);
     msgObj.addCustom(custom_obj);
@@ -352,8 +405,8 @@ module.exports = {
 
   /**
    * G
-   * @param {*} toUserID 
-   * @param {*} msg 
+   * @param {*} toUserID
+   * @param {*} msg
    */
   formatC2CCustomMsg(toUserID, msg) {
     // custom消息
@@ -361,16 +414,31 @@ module.exports = {
     var desc = msg.desc || '';
     var ext = msg.ext || '';
 
-    var session = new webim.Session(webim.SESSION_TYPE.C2C, toUserID, toUserID, '', Math.round(new Date().getTime() / 1000));
+    var session = new webim.Session(
+      webim.SESSION_TYPE.C2C,
+      toUserID,
+      toUserID,
+      '',
+      Math.round(new Date().getTime() / 1000),
+    );
     var isSend = true; //是否为自己发送
     var seq = -1; //消息序列，-1表示sdk自动生成，用于去重
     var random = Math.round(Math.random() * 4294967296); //消息随机数，用于去重
     var msgTime = Math.round(new Date().getTime() / 1000); //消息时间戳
-    var subType = webim.C2C_MSG_SUB_TYPE.COMMON; //消息子类型 
-    var msgObj = new webim.Msg(session, isSend, seq, random, msgTime, this.userData.identifier, subType, this.userData.identifierNick);
+    var subType = webim.C2C_MSG_SUB_TYPE.COMMON; //消息子类型
+    var msgObj = new webim.Msg(
+      session,
+      isSend,
+      seq,
+      random,
+      msgTime,
+      this.userData.identifier,
+      subType,
+      this.userData.identifierNick,
+    );
 
     var custom_obj = new webim.Msg.Elem.Custom(data, desc, ext);
     msgObj.addCustom(custom_obj);
     return msgObj;
-  }
-}
+  },
+};
