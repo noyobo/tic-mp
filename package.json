@@ -1,0 +1,21 @@
+{
+  "name": "tic-mp",
+  "private": true,
+  "version": "1.0.0",
+  "description": "互动课堂小程序",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noyobo/tic-mp.git"
+  },
+  "keywords": [
+    "tic"
+  ],
+  "bugs": {
+    "url": "https://github.com/noyobo/tic-mp/issues"
+  },
+  "homepage": "https://github.com/noyobo/tic-mp#readme"
+}
