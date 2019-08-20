@@ -9,11 +9,12 @@
   left: 50%;
   width: 100%;
   height: 100%;
-  transform: translate(-50%, -50%);
   overflow: hidden;
+  transform: translate(-50%, -50%);
 }
 
 .tic-board-box .tic_board_canvas {
+  z-index: 15;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -21,7 +22,6 @@
   height: 100%;
   transform: translate(-50%, -50%);
   background: transparent;
-  z-index: 15;
 }
 
 .tic-board-box .tic_board_canvas.float_layout {
@@ -29,8 +29,8 @@
 }
 
 .tic-board-box .tic_board_img_bg {
-  position: absolute;
   z-index: 10;
+  position: absolute;
 }
 
 .tic-board-box .tic_board_img_bg.vertical {}
@@ -41,6 +41,7 @@
 }
 
 .tic-board-box .tic_board_color_bg {
+  z-index: 5;
   position: absolute;
   top: 0;
   right: 0;
@@ -48,5 +49,4 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 5;
 }
