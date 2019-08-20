@@ -1,7 +1,26 @@
 <template name="1v1horizontal">
   <view id="txc_video_box" class="t1v1horizontal videoview">
     <view class="pusher-box" style="width:{{winWidth}}px;height:{{winHeight}}px;">
-      <live-pusher wx:if="{{pushURL}}" id="rtcpusher" autopush mode="RTC" url="{{pushURL}}" aspect="{{aspect}}" min-bitrate="{{minBitrate}}" max-bitrate="{{maxBitrate}}" audio-quality="high" beauty="{{beauty}}" whiteness="{{whiteness}}" muted="{{muted}}" waiting-image="{{waitingImg}}" background-mute="{{true}}" debug="{{debug}}" bindstatechange="onPush" binderror="onError" enable-camera="{{enableCamera}}">
+      <live-pusher
+        wx:if="{{pushURL}}"
+        id="rtcpusher"
+        autopush
+        mode="RTC"
+        url="{{pushURL}}"
+        aspect="{{aspect}}"
+        min-bitrate="{{minBitrate}}"
+        max-bitrate="{{maxBitrate}}"
+        audio-quality="high"
+        beauty="{{beauty}}"
+        whiteness="{{whiteness}}"
+        muted="{{muted}}"
+        waiting-image="{{waitingImg}}"
+        background-mute="{{true}}"
+        debug="{{debug}}"
+        bindstatechange="onPush"
+        binderror="onError"
+        enable-camera="{{enableCamera}}"
+      >
         <cover-view class="poster" hidden="{{enableCamera}}">
           <cover-image class="set" src="{{pusherBackgroundImg}}"></cover-image>
         </cover-view>
@@ -14,7 +33,19 @@
       <view class="poster">
         <cover-image class="set" src="{{playerBackgroundImg}}"></cover-image>
       </view>
-      <live-player id="{{fixPlayId || members[0].userID}}" autoplay hidden="{{!members[0].accelerateURL}}" mode="RTC" object-fit="fillCrop" min-cache="0.1" max-cache="0.3" src="{{members[0].accelerateURL}}" debug="{{debug}}" background-mute="{{true}}" bindstatechange="onPlay">
+      <live-player
+        id="{{fixPlayId || members[0].userID}}"
+        autoplay
+        hidden="{{!members[0].accelerateURL}}"
+        mode="RTC"
+        object-fit="fillCrop"
+        min-cache="0.1"
+        max-cache="0.3"
+        src="{{members[0].accelerateURL}}"
+        debug="{{debug}}"
+        background-mute="{{true}}"
+        bindstatechange="onPlay"
+      >
         <cover-view class="loading" wx:if="{{members[0].loading}}">
           <cover-image src="/pages/Resources/loading_image0.png"></cover-image>
         </cover-view>

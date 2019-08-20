@@ -11,7 +11,7 @@
   <view class="section">
     <view class="section_title">课堂ID</view>
     <view class="section_input">
-      <input maxlength="10" type="number" bindinput='bindRoomID' placeholder="课堂ID" />
+      <input maxlength="10" type="number" bindinput="bindRoomID" placeholder="课堂ID" />
     </view>
   </view>
   <view class="section">
@@ -23,7 +23,7 @@
           老师
         </label>
         <label class="radio">
-          <radio value="0" checked="true"/>
+          <radio value="0" checked="true" />
           学生
         </label>
       </radio-group>

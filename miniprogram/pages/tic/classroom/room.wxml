@@ -1,6 +1,23 @@
 <view class="container">
   <view class="camera-box" hidden="{{boardShowFullScreen}}">
-    <webrtc-room id="webrtcroom" wx:if="{{!!template}}" template="{{template}}" roomID="{{roomID}}" userID="{{userID}}" userSig="{{userSig}}" sdkAppID="{{sdkAppID}}" privateMapKey="{{privateMapKey}}" smallViewLeft="{{smallViewLeft}}" smallViewTop="{{smallViewTop}}" smallViewWidth="{{smallViewWidth}}" smallViewHeight="{{smallViewHeight}}" enableCamera="{{enableCamera}}" playerBackgroundImg="{{playerBackgroundImg}}" enableIM="{{false}}" bindRoomEvent="onRoomEvent"></webrtc-room>
+    <webrtc-room
+      id="webrtcroom"
+      wx:if="{{!!template}}"
+      template="{{template}}"
+      roomID="{{roomID}}"
+      userID="{{userID}}"
+      userSig="{{userSig}}"
+      sdkAppID="{{sdkAppID}}"
+      privateMapKey="{{privateMapKey}}"
+      smallViewLeft="{{smallViewLeft}}"
+      smallViewTop="{{smallViewTop}}"
+      smallViewWidth="{{smallViewWidth}}"
+      smallViewHeight="{{smallViewHeight}}"
+      enableCamera="{{enableCamera}}"
+      playerBackgroundImg="{{playerBackgroundImg}}"
+      enableIM="{{false}}"
+      bindRoomEvent="onRoomEvent"
+    ></webrtc-room>
   </view>
   <view class="tools-box" wx:if="{{!boardShowFullScreen}}">
     <image catchtap="uploadFile" class="item-icon upload-icon" src="/resources/images/upload-icon.png"></image>
@@ -23,12 +40,24 @@
         <view id="scroll-bottom" wx:if="{{scrollToView}}"></view>
       </scroll-view>
       <view class="comment-input">
-        <input value="{{chatMsg}}" maxlength="50" bindinput="bindChatMsg" placeholder="输入文字内容" confirm-type="send" bindconfirm="sendComment" cursor-spacing="5" />
+        <input
+          value="{{chatMsg}}"
+          maxlength="50"
+          bindinput="bindChatMsg"
+          placeholder="输入文字内容"
+          confirm-type="send"
+          bindconfirm="sendComment"
+          cursor-spacing="5"
+        />
       </view>
     </view>
     <view class="board_container" hidden="{{!isShowBoardPanel}}">
       <tic-component id="tx_board" bindIMEvent="onIMEvent" bindBoardEvent="onBoardEvent">
-        <cover-image catchtap="togglerBoardFullScreen" class="tx_board_slot {{boardShowFullScreen ? 'horizontal': ''}}" src="{{boardShowFullScreen ? '/resources/images/smallscreen.png':'/resources/images/fullscreen.png' }}"></cover-image>
+        <cover-image
+          catchtap="togglerBoardFullScreen"
+          class="tx_board_slot {{boardShowFullScreen ? 'horizontal': ''}}"
+          src="{{boardShowFullScreen ? '/resources/images/smallscreen.png':'/resources/images/fullscreen.png' }}"
+        ></cover-image>
       </tic-component>
     </view>
   </view>

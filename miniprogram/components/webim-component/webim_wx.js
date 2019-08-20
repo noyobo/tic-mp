@@ -974,7 +974,7 @@ module.exports = (function() {
     //表情对象，用户可以自定义
     var emotions = {};
     //工具类
-    var tool = new function() {
+    var tool = new (function() {
       //格式化时间戳
       //format格式如下：
       //yyyy-MM-dd hh:mm:ss 年月日时分秒(默认格式)
@@ -1224,10 +1224,10 @@ module.exports = (function() {
         }
         return json;
       };
-    }();
+    })();
 
     //日志对象
-    var log = new function() {
+    var log = new (function() {
       var on = true;
 
       this.setOn = function(onFlag) {
@@ -1258,7 +1258,7 @@ module.exports = (function() {
           on && console.debug(logStr);
         } catch (e) {}
       };
-    }();
+    })();
     //获取unix时间戳
     var unixtime = function(d) {
       if (!d) d = new Date();
@@ -3023,7 +3023,7 @@ module.exports = (function() {
     //end
     initBrowserInfo();
     // singleton object ConnManager
-    var ConnManager = new function() {
+    var ConnManager = new (function() {
       var onConnCallback = null; //回调函数
       this.init = function(onConnNotify, cbOk, cbErr) {
         if (onConnNotify) onConnCallback = onConnNotify;
@@ -3086,7 +3086,7 @@ module.exports = (function() {
           },
         );
       };
-    }();
+    })();
     // class Session
     var Session = function(type, id, name, icon, time, seq) {
       this._impl = {
@@ -3721,7 +3721,7 @@ module.exports = (function() {
     };
 
     // singleton object MsgStore
-    var MsgStore = new function() {
+    var MsgStore = new (function() {
       var sessMap = {}; //跟所有用户或群的聊天记录MAP
       var sessTimeline = []; //按时间降序排列的会话列表
       msgCache = {}; //消息缓存，用于判重
@@ -3881,9 +3881,9 @@ module.exports = (function() {
         });
         sessTimeline = arr;
       };
-    }();
+    })();
     // singleton object MsgManager
-    var MsgManager = new function() {
+    var MsgManager = new (function() {
       var onMsgCallback = null; //新消息(c2c和group)回调
 
       var onGroupInfoChangeCallback = null; //群资料变化回调
@@ -5721,10 +5721,10 @@ module.exports = (function() {
           },
         );
       };
-    }();
+    })();
 
     //上传文件
-    var FileUploader = new function() {
+    var FileUploader = new (function() {
       this.fileMd5 = null;
       //获取文件MD5
       var getFileMD5 = function(file, cbOk, cbErr) {
@@ -5963,7 +5963,7 @@ module.exports = (function() {
           cbErr,
         );
       };
-    }();
+    })();
 
     //web im 基础对象
 
