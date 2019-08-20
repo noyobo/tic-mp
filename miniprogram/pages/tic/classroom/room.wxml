@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="camera-box" hidden="{{boardShowFullScreen}}">
+    <webrtc-room id="webrtcroom" wx:if="{{!!template}}" template="{{template}}" roomID="{{roomID}}" userID="{{userID}}" userSig="{{userSig}}" sdkAppID="{{sdkAppID}}" privateMapKey="{{privateMapKey}}" smallViewLeft="{{smallViewLeft}}" smallViewTop="{{smallViewTop}}" smallViewWidth="{{smallViewWidth}}" smallViewHeight="{{smallViewHeight}}" enableCamera="{{enableCamera}}" playerBackgroundImg="{{playerBackgroundImg}}" enableIM="{{false}}" bindRoomEvent="onRoomEvent"></webrtc-room>
+  </view>
+  <view class="tools-box" wx:if="{{!boardShowFullScreen}}">
+    <image catchtap="uploadFile" class="item-icon upload-icon" src="/resources/images/upload-icon.png"></image>
+  </view>
+  <viev class="board_chat_tablist_container" wx:if="{{!boardShowFullScreen}}">
+    <view bindtap="showBoardPanel" class="tab {{isShowBoardPanel ? 'active': ''}}">
+      <view class="text">互动白板</view>
+    </view>
+    <view bindtap="showChatPanel" class="tab {{isShowBoardPanel ? '': 'active'}}">
+      <view class="text">聊天</view>
+    </view>
+  </viev>
+  <view class="board_chat_container {{boardShowFullScreen ? 'horizontal': ''}}">
+    <view class="chat_container" hidden="{{isShowBoardPanel}}">
+      <scroll-view scroll-y scroll-into-view="{{scrollToView}}" class="chat_scroll_container">
+        <view class="chat_item" wx:for="{{msgList}}">
+          {{item.send}}：{{item.content}}
+          <text wx:if="{{item.type == 'admin'}}">{{item.content}}</text>
+        </view>
+        <view id="scroll-bottom" wx:if="{{scrollToView}}"></view>
+      </scroll-view>
+      <view class="comment-input">
+        <input value="{{chatMsg}}" maxlength="50" bindinput="bindChatMsg" placeholder="输入文字内容" confirm-type="send" bindconfirm="sendComment" cursor-spacing="5" />
+      </view>
+    </view>
+    <view class="board_container" hidden="{{!isShowBoardPanel}}">
+      <tic-component id="tx_board" bindIMEvent="onIMEvent" bindBoardEvent="onBoardEvent">
+        <cover-image catchtap="togglerBoardFullScreen" class="tx_board_slot {{boardShowFullScreen ? 'horizontal': ''}}" src="{{boardShowFullScreen ? '/resources/images/smallscreen.png':'/resources/images/fullscreen.png' }}"></cover-image>
+      </tic-component>
+    </view>
+  </view>
+</view>
