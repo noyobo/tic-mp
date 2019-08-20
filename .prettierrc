@@ -4,5 +4,13 @@
   "singleQuote": true,
   "semi": true,
   "arrowParens": "always",
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": "*.wxml",
+      "options": {
+        "parser": "vue"
+      }
+    }
+  ]
 }
