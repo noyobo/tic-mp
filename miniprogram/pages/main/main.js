@@ -6,10 +6,28 @@ Page({
   data: {
     canUse: 0, // 是否可以使用音视频组件
     entryInfos: [
+      // {
+      //   icon: "../../resources/images/service.png",
+      //   title: "视频客服",
+      //   // desc: "<live-room>",
+      //   navigateTo: "/pages/customer-service/index/index"
+      // },
       {
         icon: '../../resources/images/tic.png',
         title: '互动课堂',
+        // desc: "<tic-sdk>",
         navigateTo: '/pages/tic/index/index',
+      },
+      // {
+      //   icon: "../../resources/images/hospital.png",
+      //   title: "云急救",
+      //   navigateTo: "/pages/sos/home/home"
+      // }
+
+      {
+        icon: '../../resources/images/video-chat.png',
+        title: '视频通话组件',
+        navigateTo: '/pages/tavkit/index/index',
       },
     ],
   },

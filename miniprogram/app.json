@@ -2,9 +2,11 @@
   "pages": [
     "pages/main/main",
     "pages/tic/index/index",
-    "pages/tic/classroom/room"
+    "pages/tic/classroom/room",
+	  "pages/tic/classroom_new/room"
   ],
   "window": {
+    "pageOrientation": "auto",
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "腾讯云行业解决方案",
     "navigationBarBackgroundColor": "#f8f8f8",

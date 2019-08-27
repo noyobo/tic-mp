@@ -1,6 +1,7 @@
 <view class="tic-board-box">
   <view
     class="tic-board-wrap"
+    hidden="{{hideBoard}}"
     style="width: {{wrapWidth}}px; height: {{wrapHeight}}px;"
     bindtouchstart="bindContainerTouchstart"
     bindtouchmove="bindContainerTouchmove"
@@ -14,6 +15,7 @@
     <image
       id="tic_board_img_bg"
       class="tic_board_img_bg {{orientation}}"
+      hidden="{{hideImg}}"
       style="{{imgStyle}}"
       wx:if="{{currentPic}}"
       src="{{currentPic}}"

@@ -29,6 +29,24 @@
       </radio-group>
     </view>
   </view>
+  <view class="section">
+    <view class="section_title">模式</view>
+    <view class="section_input">
+      <radio-group class="radio-group mode-group" bindchange="modeChange">
+        <label class="radio">
+          <radio value="1" />
+          webrtcroom + canvas
+        </label>
+        <label class="radio">
+          <radio value="0" checked="true" />
+          webrtcroom + webview
+        </label>
+      </radio-group>
+    </view>
+  </view>
   <view class="tips">体验互通的时候，请选择不同的账号</view>
+  <view class="tips">webrtcroom + canvas： 不支持动画PPT</view>
+  <view class="tips">webrtcroom + webview：支持动画PPT</view>
+
   <button type="primary" bindtap="onClick">{{role? '创建': '进入'}}课堂</button>
 </view>

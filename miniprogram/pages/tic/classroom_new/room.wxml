@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="camera-box" hidden="{{boardShowFullScreen}}">
+    <webrtc-room
+      id="webrtcroom"
+      wx:if="{{!!template}}"
+      template="{{template}}"
+      roomID="{{roomID}}"
+      userID="{{userID}}"
+      userSig="{{userSig}}"
+      sdkAppID="{{sdkAppID}}"
+      privateMapKey="{{privateMapKey}}"
+      smallViewLeft="{{smallViewLeft}}"
+      smallViewTop="{{smallViewTop}}"
+      smallViewWidth="{{smallViewWidth}}"
+      smallViewHeight="{{smallViewHeight}}"
+      enableCamera="{{enableCamera}}"
+      playerBackgroundImg="{{playerBackgroundImg}}"
+      enableIM="{{false}}"
+      bindRoomEvent="onRoomEvent"
+    ></webrtc-room>
+  </view>
+  <web-view class="tclass-box" style="z-index: 10;" src="{{classUrl}}"></web-view>
+</view>

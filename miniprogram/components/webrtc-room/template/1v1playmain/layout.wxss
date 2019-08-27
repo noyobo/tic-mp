@@ -1,14 +1,14 @@
 .t1v1playmain.videoview {
   position: relative;
-  width: 100%;
-  height: 100%;
   background-repeat:no-repeat;
   background-size: cover;
+  width: 100%;
+  height: 100%;
 }
 
-.t1v1playmain .pusher-box { 
-	display: inline-block;
+.t1v1playmain .pusher-box {
 	position: absolute; 
+	display: inline-block; 
 	overflow: hidden;
 	text-align: center;
 }
@@ -18,22 +18,22 @@
 	height: 100%; 
 }
 
-.t1v1playmain .player-box { 
-	display: inline-block;
-	position: relative;
+.t1v1playmain .player-box {
+	position: relative; 
+	display: inline-block; 
+	overflow: hidden;
 	width: 100%;
 	height: 100%; 
-	overflow: hidden; 
 	text-align: center;
   vertical-align: top;
 }
 
 .t1v1playmain .poster {
 	position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
 	height: 100%;
+  top: 0;
+  left: 0;
 	background-color: #000;
 }
 

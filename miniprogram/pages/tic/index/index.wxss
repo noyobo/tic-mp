@@ -1,17 +1,17 @@
 .container-box {
-  height: 100vh;
-  overflow: hidden;
-  background-color: #fff;
   background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png);
+  background-color: #fff;
   background-repeat: no-repeat;
   background-size: cover;
+  height: 100vh;
+  overflow: hidden;
   color: #fff;
 }
 
 
 button {
-  width: 40vw;
   margin: 4vh auto;
+  width: 40vw;
   font-size: 14px;
 }
 
@@ -22,25 +22,25 @@ button {
 
 .section .section_title {
   flex: 1;
-  color: #fff;
   font-size: 32rpx;
+  color: #fff;
   text-align: right;
 }
 
 .section .section_input {
   flex: 3;
-  margin: 0 50rpx;
-  color: #fff;
   font-size: 32rpx;
+  color: #fff;
+  margin: 0 50rpx;
 }
 
 .section .section_input input,
 .section .section_input picker {
-  padding: 5rpx 0;
-  border-bottom: 1px solid #577785;
   background-color: transparent;
-  font-size: 16px;
+  border-bottom: 1px solid #577785;
   text-align: center;
+  font-size: 16px;
+  padding: 5rpx 0;
 }
 
 .section .dropdowns-box {
@@ -51,15 +51,21 @@ button {
   position: absolute;
   top: 0;
   right: 0;
+  margin-right: 10rpx;
   width: 20rpx;
   height: 20rpx;
-  margin-right: 10rpx;
-  transform: rotate(225deg);
-  border-top: 1rpx solid #fff;
   border-left: 1rpx solid #fff;
+  border-top: 1rpx solid #fff;
+  transform: rotate(225deg);
+}
+
+.mode-group label {
+  display: block;
+  margin-bottom: 10rpx;
 }
 
 .tips {
-  font-size: 24rpx;
   text-align: center;
+  font-size: 24rpx;
+  margin-bottom: 10rpx;
 }

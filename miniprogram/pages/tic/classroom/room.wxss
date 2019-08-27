@@ -3,11 +3,11 @@
   position: relative;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
-  background-color: #fff;
   background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png);
+  background-color: #fff;
   background-repeat: no-repeat;
   background-size: cover;
+  overflow: hidden;
 }
 
 .camera-box {
@@ -22,26 +22,26 @@
 }
 
 .container .tools-box .item-icon {
-  width: 50rpx;
   height: 50rpx;
+  width: 50rpx;
   padding: 15rpx;
 }
 
 
 .container .board_chat_tablist_container {
-  display: flex;
   height: 80rpx;
-  background: #fff;
   line-height: 80rpx;
+  display: flex;
+  background: #fff;
 }
 
 .board_chat_tablist_container .tab {
-  box-sizing: border;
   flex: 1;
-  background-color: #6c757d;
-  color: #fff;
   font-size: 32rpx;
   text-align: center;
+  color: #fff;
+  background-color: #6c757d;
+  box-sizing: border;
 }
 
 .board_chat_tablist_container .tab.active {
@@ -55,8 +55,8 @@
 
 .container .board_chat_container.horizontal {
   position: fixed;
-  top: 0;
   left: 0;
+  top: 0;
   width: calc(100vh * 9 / 16);
   height: 100vh;
 }
@@ -71,8 +71,8 @@
   right: 0;
   width: 60rpx;
   height: 60rpx;
-  border-radius: 50%;
   background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
 }
 
 .container .board_container .tx_board_slot.horizontal {
@@ -91,11 +91,11 @@
 }
 
 .container .chat_container .chat_scroll_container .chat_item {
-  height: 48rpx;
   padding: 0 20rpx;
-  color: #333;
-  font-size: 32rpx;
+  height: 48rpx;
   line-height: 48rpx;
+  font-size: 32rpx;
+  color: #333;
 }
 
 .comment-input {
@@ -103,8 +103,8 @@
 }
 
 .comment-input input {
-  height: 80rpx;
-  padding: 0 10rpx;
   font-size: 24rpx;
+  height: 80rpx;
   line-height: 80rpx;
+  padding: 0 10rpx;
 }

@@ -213,6 +213,7 @@ Component({
       switch (templateName) {
         case '1v1horizontal':
         case '1v1bigsmall':
+        case '1v1':
           this.setData({
             maxMembers: 1,
             members: [{}],
@@ -417,7 +418,7 @@ Component({
         method: 'POST',
         success: function(res) {
           console.log('requestSigServer success:', res);
-          if (res.data['RspHead']['ErrorCode'] != 0) {
+          if (res.data['ErrorCode'] || res.data['RspHead']['ErrorCode'] != 0) {
             self.postErrorEvent(CONSTANT.ROOM.ERROR_REQUEST_ROOM_SIG, '获取推流地址错误');
             return;
           }
@@ -682,12 +683,14 @@ Component({
 
     //播放器live-player回调
     onPlay: function(e) {
+      console.error(e.currentTarget.id, self.data.members);
       self.data.members.forEach(function(val) {
         // 如果是1v1 则使用固定的playid
         if (
           (self.data['1v1Templates'].indexOf(self.data.template) > -1 && e.currentTarget.id === self.data.fixPlayId) ||
           e.currentTarget.id == val.userID
         ) {
+          // if (e.currentTarget.id == val.userID) {
           switch (e.detail.code) {
             case 2007: {
               console.log('视频播放loading: ', e);

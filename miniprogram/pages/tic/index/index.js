@@ -9,6 +9,7 @@ Page({
     roomID: null,
     role: 0, // 0 学生， 1： 老师
     index: 0,
+    mode: 0, // 0 webview 1： canvas
   },
 
   bindPickerChange: function(e) {
@@ -33,6 +34,12 @@ Page({
     });
   },
 
+  modeChange(ev) {
+    this.setData({
+      mode: ev.detail.value * 1,
+    });
+  },
+
   onClick() {
     if (!this.data.roomID || isNaN(this.data.roomID)) {
       wx.showToast({
@@ -41,9 +48,11 @@ Page({
       });
       return;
     }
-    var url = `/pages/tic/classroom/room?sdkAppId=${this.data.sdkAppId}&identifier=${
-      TEST_ACCOUNT.users[this.data.index]['userId']
-    }&userSig=${TEST_ACCOUNT.users[this.data.index]['userToken']}&roomID=${this.data.roomID}&role=${this.data.role}`;
+    var url = `/pages/tic/${this.data.mode ? 'classroom' : 'classroom_new'}/room?sdkAppId=${
+      this.data.sdkAppId
+    }&identifier=${TEST_ACCOUNT.users[this.data.index]['userId']}&userSig=${
+      TEST_ACCOUNT.users[this.data.index]['userToken']
+    }&roomID=${this.data.roomID}&role=${this.data.role}`;
     wx.navigateTo({
       url: url,
     });

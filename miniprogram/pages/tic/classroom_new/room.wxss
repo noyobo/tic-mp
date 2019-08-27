@@ -1,0 +1,38 @@
+/**index.wxss**/
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png);
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.camera-box {
+  position: absolute;
+  z-index: 10;
+}
+
+
+.tclass-box {
+  position: absolute;
+  z-index: 12;
+}
+
+@media (orientation: portrait) {
+  .camera-box {
+    width: 100vw;
+    height: 23vh;
+    /*calc(100vh - 100vw * 9 / 16 - 80rpx - 80rpx);*/
+  }
+}
+
+@media (orientation: landscape) {
+  .camera-box {
+    width: 20vw;
+    /*calc(100vw - 100vh * 16 / 9 - 80rpx - 80rpx);*/
+    height: 100vh;
+  }
+}

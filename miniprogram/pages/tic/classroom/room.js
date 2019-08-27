@@ -97,7 +97,7 @@ Page({
       },
       (res) => {
         if (res.code) {
-          this.showErrorToast('登录失败', error);
+          this.showErrorToast('登录失败', res.desc);
           wx.navigateBack({
             delta: 1,
           });
@@ -160,6 +160,8 @@ Page({
           this.data.teduBoard = this.txTic.getBoardInstance();
           this.initBoardEvent();
           this.startRTC();
+
+          var TwebView = this.selectComponent('#test-webView');
         }
       },
     );
@@ -505,10 +507,10 @@ Page({
       () => {
         if (boardShowFullScreen) {
           // 全屏显示，则切换到横屏方式
-          this.txTic.setOrientation('horizontal');
+          this.txTic.setOrientation('horizontal', () => {});
         } else {
           // 垂直方向
-          this.txTic.setOrientation('vertical');
+          this.txTic.setOrientation('vertical', () => {});
         }
       },
     );
