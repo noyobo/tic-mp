@@ -1,5 +1,4 @@
 // 常量
-const CONSTANT = require('../../constant/Constant');
 const webim = require('../webim-component/webim_wx.min');
 // webim组件
 const webimComponent = require('../webim-component/webim-component');
@@ -123,23 +122,24 @@ Component({
      */
     createClassroom(classId, callback) {
       // WebIM加入聊天房间
-      webimComponent.createRoom(this.data.userId, classId).then(
-        (res) => {
+      webimComponent
+        .createRoom(this.data.userId, classId)
+        .then((res) => {
+          // eslint-disable-next-line promise/always-return
           callback &&
             callback({
               module: Constant.TICModule.TICMODULE_IMSDK,
               code: 0,
             });
-        },
-        (error) => {
+        })
+        .catch((error) => {
           callback &&
             callback({
               module: Constant.TICModule.TICMODULE_IMSDK,
               code: error.ErrorCode,
               desc: error.ErrorInfo,
             });
-        },
-      );
+        });
     },
 
     /**

@@ -184,7 +184,9 @@ Component({
               var p = self.data.aspect.split(':');
               pw = p[0];
               ph = p[1];
-            } catch (e) {}
+            } catch (e) {
+              // empty
+            }
             self.setData({
               winWidth: halfWidth,
               winHeight: (halfWidth * ph) / pw,
