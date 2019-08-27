@@ -78,9 +78,6 @@ Component({
       // 实时绘制的canvas
       var canvasDrawComponent = wx.createCanvasContext('tic_float_board_canvas', this);
 
-      var width = this.data.boardWidth;
-      var height = this.data.boardHeight;
-
       this.data.board = wx.board = new TEduBoard({
         userId: boardConfig.userId,
         userSig: boardConfig.userSig,
@@ -172,9 +169,8 @@ Component({
      * @param {*} ev
      */
     imgOnLoad(ev) {
-      let src = ev.currentTarget.dataset.src,
-        width = ev.detail.width,
-        height = ev.detail.height;
+      let width = ev.detail.width;
+      let height = ev.detail.height;
 
       // 获取图片原始宽高
       this.setData(
