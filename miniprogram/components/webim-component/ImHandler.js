@@ -203,22 +203,5 @@ var ImHandler = {
       },
     );
   },
-
-  retrySendBoardGroupCustomMessage(msg) {
-    // 重试3次
-    if ((this.sendMsgFailMap[msg.seq + ''] || 0) > 1) {
-      return;
-    }
-    this.sendMsgFailMap[msg.seq + ''] = (this.sendMsgFailMap[msg.seq + ''] || 0) + 1;
-    webim.sendMsg(
-      msg,
-      function(resp) {
-        console.log(resp);
-      },
-      (error) => {
-        this.retrySendBoardGroupCustomMessage(msg);
-      },
-    );
-  },
 };
 module.exports = ImHandler;

@@ -1,5 +1,3 @@
-const ticNet = require('../../../net/ticnet');
-const CONSTANT = require('../../../constant/Constant');
 const TEST_ACCOUNT = require('../account');
 
 Page({

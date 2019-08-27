@@ -100,7 +100,7 @@ var CircularJSON = (function(JSON, RegExp) {
   }
   function regenerateObject(root, current, retrieve) {
     for (var key in current) {
-      if (current.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(current, key)) {
         current[key] = regenerate(root, current[key], retrieve);
       }
     }
@@ -111,7 +111,7 @@ var CircularJSON = (function(JSON, RegExp) {
       ? regenerateArray(root, current, retrieve)
       : current instanceof $String
       ? current.length
-        ? retrieve.hasOwnProperty(current)
+        ? Object.prototype.hasOwnProperty.call(retrieve, retrieve)
           ? retrieve[current]
           : (retrieve[current] = retrieveFromPath(root, current.split(specialChar)))
         : root

@@ -1,5 +1,3 @@
-const CONSTANT = require('../../../constant/Constant');
-
 Page({
   // TIC
   txTic: null,

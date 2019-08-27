@@ -160,8 +160,6 @@ Page({
           this.data.teduBoard = this.txTic.getBoardInstance();
           this.initBoardEvent();
           this.startRTC();
-
-          var TwebView = this.selectComponent('#test-webView');
         }
       },
     );

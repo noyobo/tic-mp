@@ -1,6 +1,6 @@
 const imHandler = require('./im_handler.js');
 const CONSTANT = require('../../constant/Constant');
-var CircularJSON = require('../libs/circular-json');
+const CircularJSON = require('../libs/circular-json');
 
 Component({
   /**
@@ -166,7 +166,7 @@ Component({
   },
 
   ready() {
-    self = this;
+    const self = this;
     if (!this.data.pusherContext) {
       this.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
     }
@@ -209,7 +209,6 @@ Component({
      * @param {*} templateName
      */
     initLayout(templateName) {
-      self = this;
       switch (templateName) {
         case '1v1horizontal':
         case '1v1bigsmall':
@@ -273,7 +272,6 @@ Component({
      * webrtc-room程序的入口
      */
     start: function(isNetWorkChange) {
-      self = this;
       this.data.hasExitRoom = false;
 
       // 如果有推流地址了,且只是网络变化，则不再获取推流
@@ -293,6 +291,7 @@ Component({
      * 停止
      */
     stop: function() {
+      const self = this;
       self.data.hasExitRoom = true;
       self.exitRoom();
     },
@@ -301,6 +300,7 @@ Component({
      * 暂停
      */
     pause: function() {
+      const self = this;
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
@@ -312,6 +312,7 @@ Component({
     },
 
     resume: function() {
+      const self = this;
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
@@ -326,6 +327,7 @@ Component({
      * 切换摄像头
      */
     switchCamera: function() {
+      const self = this;
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
@@ -336,6 +338,7 @@ Component({
      * 退出房间
      */
     exitRoom: function() {
+      const self = this;
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
@@ -355,19 +358,11 @@ Component({
     },
 
     postErrorEvent: function(errCode, errMsg) {
-      self.postEvent('error', errCode, errMsg);
+      this.postEvent('error', errCode, errMsg);
     },
 
     postEvent: function(tag, code, detail) {
-      self.triggerEvent(
-        'RoomEvent',
-        {
-          tag: tag,
-          code: code,
-          detail: detail,
-        },
-        {},
-      );
+      this.triggerEvent('RoomEvent', { tag: tag, code: code, detail: detail }, {});
     },
 
     /**
@@ -468,6 +463,7 @@ Component({
     },
 
     onWebRTCUserListPush: function(msg) {
+      const self = this;
       if (!msg) {
         return;
       }
@@ -519,6 +515,7 @@ Component({
 
     //将在res.pushers中，但不在self.data.members中的流，加入到self.data.members中
     onPusherJoin: function(res) {
+      const self = this;
       res.pushers.forEach(function(val) {
         var emptyIndex = -1;
         var hasPlay = false;
@@ -548,6 +545,7 @@ Component({
 
     //将在self.data.members中，但不在res.pushers中的流删除
     onPusherQuit: function(res) {
+      const self = this;
       for (var i = 0; i < self.data.members.length; i++) {
         var needDelete = true;
         for (var j = 0; j < res.pushers.length; j++) {
@@ -567,6 +565,7 @@ Component({
 
     //删除res.pushers
     delPusher: function(pusher) {
+      const self = this;
       for (var i = 0; i < self.data.members.length; i++) {
         if (self.data.members[i].userID == pusher.userID) {
           var player = wx.createLivePlayerContext(pusher.userID, self);
@@ -581,6 +580,7 @@ Component({
 
     // 推流事件
     onPush: function(e) {
+      const self = this;
       if (!self.data.pusherContext) {
         self.data.pusherContext = wx.createLivePusherContext('rtcpusher', self);
       }
@@ -675,7 +675,7 @@ Component({
           errorMsg = '未获取到录音功能权限，请删除小程序后重新打开';
           break;
       }
-      self.postErrorEvent(
+      this.postErrorEvent(
         CONSTANT.ROOM.ERROR_CAMERA_MIC_PERMISSION,
         errorMsg || '未获取到摄像头、录音功能权限，请删除小程序后重新打开',
       );
@@ -683,7 +683,7 @@ Component({
 
     //播放器live-player回调
     onPlay: function(e) {
-      console.error(e.currentTarget.id, self.data.members);
+      const self = this;
       self.data.members.forEach(function(val) {
         // 如果是1v1 则使用固定的playid
         if (
@@ -849,14 +849,14 @@ Component({
      * IM错误信息
      */
     fireIMErrorEvent: function(errCode, errMsg) {
-      self.fireIMEvent('error', errCode, errMsg);
+      this.fireIMEvent('error', errCode, errMsg);
     },
 
     /**
      * 触发IM信息
      */
     fireIMEvent: function(tag, code, detail) {
-      self.triggerEvent('IMEvent', {
+      this.triggerEvent('IMEvent', {
         tag: tag,
         code: code,
         detail: detail,
