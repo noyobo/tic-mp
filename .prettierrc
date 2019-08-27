@@ -1,15 +1,40 @@
 {
-  "printWidth": 120,
-  "bracketSpacing": true,
   "singleQuote": true,
-  "semi": true,
-  "arrowParens": "always",
   "trailingComma": "all",
+  "printWidth": 120,
+  "arrowParens": "always",
+  "jsxSingleQuote": true,
+  "bracketSpacing": true,
+  "htmlWhitespaceSensitivity": "strict",
   "overrides": [
+    {
+      "files": ".prettierrc",
+      "options": {
+        "parser": "json"
+      }
+    },
+    {
+      "files": "*.wxs",
+      "options": {
+        "parser": "babel"
+      }
+    },
     {
       "files": "*.wxml",
       "options": {
         "parser": "html"
+      }
+    },
+    {
+      "files": "*.json",
+      "options": {
+        "parser": "json"
+      }
+    },
+    {
+      "files": "*.wxss",
+      "options": {
+        "parser": "css"
       }
     }
   ]
